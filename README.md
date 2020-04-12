@@ -41,10 +41,10 @@
 
 ## Backlog
 
-Outline format:
-- Initiative
-  - Epic
-    - Story (size)
+**Outline format**:
+- **Initiative**
+  - **Epic**
+    - **Story (size)**
     
 - Gather sufficient data to analyze hip-hop trends
   - Obtain list of popular hip-hop songs over the past 20 years
