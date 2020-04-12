@@ -1,7 +1,8 @@
-# MSiA423 Template Repository
+# Hip Hop Evolution - Evaluating trends in hip-hop music over the past 20 years
+## Author: Brian Cai, QA: Jake Atlas
 
 <!-- toc -->
-
+- [Project charter] (#project-charter)
 - [Directory structure](#directory-structure)
 - [Running the app](#running-the-app)
   * [1. Initialize the database](#1-initialize-the-database)
@@ -18,6 +19,26 @@
   * [Workaround for potential Docker problem for Windows.](#workaround-for-potential-docker-problem-for-windows)
 
 <!-- tocstop -->
+
+## Project charter
+
+### Scenario
+
+- We are data science consultants at Spotify; with our proprietary music information retrieval platform, we analyze music trends and provide strategic recommendations to the music industry
+- Hip hop is perhaps the most dynamic and influential music genres that exists today – it challenges social norms and pushes creativity in music production, and revitalize music across all genres and time periods through sampling 
+- A record label has approached Spotify to seek guidance in identifying the types of rappers and producers to invest in based on current hip hop trends
+
+**Vision:** Provide record label with recommendations on the types of hip hop artists to seek out
+
+**Mission:** Identify key attributes that differentiates hip hop music today from past eras 
+
+**Success criteria** 
+- Model success:
+  - Model accuracy of predicting what era of hip hop an unknown song falls under
+  - Percent of response explained by model
+  - Identifying and ranking influential music attributes
+- Business success: help record label find the next breakout hip-hop artist
+
 
 ## Directory structure 
 
