@@ -1,8 +1,9 @@
 # Hip Hop Evolution - Evaluating trends in hip-hop music over the past 20 years
-## Author: Brian Cai, QA: Jake Atlas
+### Author: Brian Cai, QA: Jake Atlas
 
 <!-- toc -->
-- [Project charter] (#project-charter)
+- [Project charter](#project-charter)
+- [Backlog](#backlog)
 - [Directory structure](#directory-structure)
 - [Running the app](#running-the-app)
   * [1. Initialize the database](#1-initialize-the-database)
@@ -22,8 +23,7 @@
 
 ## Project charter
 
-### Scenario
-
+**Scenario:**
 - We are data science consultants at Spotify; with our proprietary music information retrieval platform, we analyze music trends and provide strategic recommendations to the music industry
 - Hip hop is perhaps the most dynamic and influential music genres that exists today – it challenges social norms and pushes creativity in music production, and revitalize music across all genres and time periods through sampling 
 - A record label has approached Spotify to seek guidance in identifying the types of rappers and producers to invest in based on current hip hop trends
@@ -39,7 +39,57 @@
   - Identifying and ranking influential music attributes
 - Business success: help record label find the next breakout hip-hop artist
 
+## Backlog
 
+Outline format:
+- Initiative
+  - Epic
+    - Story (size)
+    
+- Gather sufficient data to analyze hip-hop trends
+  - Obtain list of popular hip-hop songs over the past 20 years
+    - Configure program to pull data from Billboard API (M)
+    - Obtain the top 25 songs from the Billboard Rap Chart at the beginning and middle of each year from 1990 to 2019 (S)
+  - Fetch audio attributes of top Billboard songs
+    - Configure program to pull data from Spotify API (M)
+    - Pull song attributes of top Billboard rap songs (S)
+- Identify ideal model and attributes that can best differentiate music from different eras
+  - Perform data exploration and cleansing
+     - Evaluate audio attribute trends over the years (M)
+     - Understand root cause of missing values, balance categories, etc. (M)
+   - Model relationship between hip-hip songs and their attributes
+     - Conduct data transformations and feature engineering (L)
+     - Explore various model constructs and evaluate model accuracy (L)
+- Derive strategic insights to client based on model results
+  - Evaluate model metrics
+    - Calculate CV model accuracy (S)
+    - Calculate CV r-squared (S)
+    - Evaluate feature importance (S)
+  - Generate interpretations of model results
+    - Evaluate differences between current hip-hop songs compared to past songs (M)
+    - Develop stakeholder presentation (L)
+- Create tool to take in new songs and predict the era that the song was created
+  - Bring model into production
+    - Create virtual environment with necessary packages (M)
+    - As a user, I want to be able to type in a hip hop song and have the model predict what era the song came from (L)
+  - Test robustness of model
+    - Test edge cases (e.g., Spotify does not have attributes of specific songs)  (L)
+    - Evaluate model accuracy (M)
+
+**Icebox**
+
+- Analyze samples used by songs over the years
+  - Scrape song sampling data from WhoSampled.com
+    - Create program that can retrieve list of samples used by given song (L)
+    - Retrieve list of sample used by every song in the top Billboard list (M)
+  - Create model features based on the sampled songs
+    - Use Spotify API to fetch song attributes (S)
+    - Clean / transform data into useable features (M)
+  - Evaluate impact of new features
+    - Evaluate model metrics (S)
+    - Derive new insights based on model results (M)
+    
+    
 ## Directory structure 
 
 ```
