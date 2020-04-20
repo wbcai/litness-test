@@ -1,6 +1,8 @@
 # Hip Hop Evolution - Evaluating trends in hip-hop music over the past 20 years
 ### Author: Brian Cai, QA: Jake Atlas
 
+#### DEV VERSION
+
 <!-- toc -->
 - [Project charter](#project-charter)
 - [Backlog](#backlog)
