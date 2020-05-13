@@ -1,4 +1,5 @@
 from os import path
+import os
 
 # Getting the parent directory of this file. That will function as the project home.
 PROJECT_HOME = path.dirname(path.dirname(path.abspath(__file__)))
@@ -16,13 +17,18 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:////{}'.format(DATABASE_PATH)
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 SQLALCHEMY_ECHO = False  # If true, SQL for queries made will be printed
 
-# API configs
-HOST = "host.docker.internal"
-PORT = 10000
-API_SENTIMENT_PATH = 'sentiment'
-API_ENDPOINT = "http://{}:{}/{}".format(HOST, PORT, API_SENTIMENT_PATH)
-
 # Acquire and process config
 # MAX_RECORDS_READ = 100
-BILLBOARD_RAW_LOCATION = path.join(PROJECT_HOME,'data/billboard.csv')
-SPOTIFY_RAW_LOCATION = path.join(PROJECT_HOME, 'data/spotify.csv')
+BB_HOT100_LOCATION = path.join(PROJECT_HOME,'data/bb_hot100.json')
+BB_RAPSONG_LOCATION = path.join(PROJECT_HOME,'data/bb_rapsong.json')
+SPOTIFY_LOCATION = path.join(PROJECT_HOME, 'data/spotify.csv')
+
+# Spotify API keys
+SPOTIFY_CID = os.environ.get("spotify_cid")
+SPOTIFY_SECRET = os.environ.get("spotify_secret")
+
+# S3
+S3_BUCKET_NAME = 'wbc881bk1'
+BB_HOT100_NAME = 'bb_hot100.json'
+BB_RAPSONG_NAME = 'bb_rapsong.json'
+SPOTIFY_NAME = 'spotify.csv'

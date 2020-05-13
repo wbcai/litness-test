@@ -1,14 +1,17 @@
+import sys
 import billboard
 from datetime import datetime
 import numpy as np
 import pandas as pd
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-import logging
+import logging.config 
+import config
+import json
 
 
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+logging.config.fileConfig(config.LOGGING_CONFIG)
+logger = logging.getLogger('data_pull')
 
 def get_billboard_charts(start_year = 1990, end_year = 2020, chart_name = 'rap-song', top_x = 25):
     
@@ -146,7 +149,7 @@ def concat_charts(rap_df, all_df):
     
     return concat_df
 
-def get_spotify_metadata(query_df, cid, secret):
+def get_spotify_metadata(query_df, config.SPOTIFY_CID, config.SPOTIFY_SECRET):
     
     """Obtain song metadata from Spotify API using Spotipy library
     
@@ -198,18 +201,95 @@ def get_spotify_metadata(query_df, cid, secret):
     
     return results
 
+def write_records(records, file_location):
+    """Persist API response set to file.
 
-hot_100 = get_billboard_charts(chart_name = 'hot-100', top_x = 50)
-hot100_df = prep_spotify_query(hot_100)
+    Args:
+        records (`:obj:`list` of :obj:`str`): The list of (tweet_id, score) tweet sentiment records.
+        file_location (`str`): Location to write file to.
 
-toprap = get_billboard_charts(chart_name = 'rap-song', top_x = 25)
-toprap_df = prep_spotify_query(toprap)
+    Returns:
+        None
+    """
 
-all_df = concat_charts(toprap_df, hot100_df)
+    if not file_location:
+        raise FileNotFoundError
 
-cid = "4d873f4f1fe442d399438bdef5efc4a6"
-secret = "5edc8c8b39764a0fbf920ca326a3cbbc"
+    num_records = len(records)
+    logger.debug("Writing {} records to {}".format(num_records, file_location))
 
-spotify_df = get_spotify_metadata(all_df, cid, secret)
+    with open(file_location, "w+") as output_file:
+        json.dump(records, output_file, indent=2)
+
+def upload_file(file_name, bucket, object_name=None):
+    """Upload a file to an S3 bucket
+
+    :param file_name: File to upload
+    :param bucket: Bucket to upload to
+    :param object_name: S3 object name. If not specified then file_name is used
+    :return: True if file was uploaded, else False
+    """
+
+    # If S3 object_name was not specified, use file_name
+    if object_name is None:
+        object_name = file_name
+
+    # Upload the file
+    s3_client = boto3.client('s3')
+    try:
+        response = s3_client.upload_file(file_name, bucket, object_name)
+    except ClientError as e:
+        logger.error("Failed to upload file to S3", e)
+        return False
+    return True
+
+
+if __name__ == "__main__":
+
+	# Get Billboard Hot 100 charts
+	try:
+		hot100 = get_billboard_charts(chart_name = 'hot-100', top_x = 50)
+		hot100_df = prep_spotify_query(hot100)
+	except Exception as e:
+	    logger.error("Error occured while fetching BB Hot 100.", e)
+	    sys.exit(1)
+
+	# Get Billboard Top Rap charts
+	try:
+		rapsong = get_billboard_charts(chart_name = 'rap-song', top_x = 25)
+		rapsong_df = prep_spotify_query(rapsong)
+	except Exception as e:
+	    logger.error("Error occured while fetching BB Top Rap.", e)
+	    sys.exit(1)
+
+	# Merge to single dataframe, removing songs from Hot 100 that are also in Top Rap
+	all_df = concat_charts(rapsong_df, hot100_df)
+
+	# Get Spotify metadata
+	try:
+		spotify_df = get_spotify_metadata(all_df, config.SPOTIFY_CID, config.SPOTIFY_SECRET)
+	except Exception as e:
+	    logger.error("Error occured while fetching Spotify metadata.", e)
+	    sys.exit(1)
+	finally:
+	    session.close()
+
+	# Export data to local folder
+	try:
+		write_records(hot100, config.BB_HOT100_LOCATION)
+		write_records(rapsong, config.BB_RAPSONG_LOCATION)
+
+		spotify_df.to_csv(config.SPOTIFY_LOCATION)
+
+		logger.info("API records saved")
+	except FileNotFoundError:
+		logger.error("Please provide a valid file location to persist data.")
+		sys.exit(1)
+
+    # Export data to S3
+    upload_file(config.BB_HOT100_LOCATION, config.S3_BUCKET_NAME, config.BB_HOT100_NAME)
+    upload_file(config.BB_RAPSONG_LOCATION, config.S3_BUCKET_NAME, config.BB_RAPSONG_NAME)
+    upload_file(config.SPOTIFY_LOCATION, config.S3_BUCKET_NAME, config.SPOTIFY_NAME)
+
 
 
