@@ -82,7 +82,7 @@ def get_billboard_charts(start_year = 1990, end_year = 2020, chart_name = 'rap-s
 
 		except:
 			unsuccessful.append(qdate) # if unsuccessfull, add to retry list
-			loger.warning('{} on {} not found after second try'.format(chart_name, qdate))
+			logger.warning('{} on {} not found after second try'.format(chart_name, qdate))
 			
 	logger.warning("{} unsuccessful queries for {}".format(len(unsuccessful), chart_name))
 	
