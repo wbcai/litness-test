@@ -1,3 +1,5 @@
+# Version: Ready for midpoint review
+
 from os import path
 import os
 

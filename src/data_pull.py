@@ -1,3 +1,5 @@
+##Version: Ready for midpoint review
+
 import sys
 import billboard
 from datetime import datetime
