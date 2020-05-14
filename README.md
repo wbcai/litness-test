@@ -89,6 +89,14 @@ The required environment variables are listed in `env_config`. Note: two environ
 Environment variables `SPOTIFY_CID` and `SPOTIFY_SECRET` are required for obtaining data from the Spotify Web API. You must first create a Spotify user account (Premium or Free). Then go to the [Dashboard](https://developer.spotify.com/dashboard) page at the Spotify Developer website and, if necessary, log in. Accept the latest Developer Terms of Service to complete your account set up.
 
 At the Dashboard, you can now create a new Client ID (i.e., a new app). Once you fill in some general information and accept terms and conditions, you land in the app dashboard. Here you can see your Client ID and Client Secret. The Client ID is the environment variable `SPOTIFY_CID` and the Client Secret is the environment variable `SPOTIFY_SECRET`.
+<img src="https://github.com/wbcai/2020-MSIA423-Cai-Litness-Test/blob/development/figures/spotify_step1.png" width="600">
+
+<img src="https://github.com/wbcai/2020-MSIA423-Cai-Litness-Test/blob/development/figures/spotify_step2.png" width="200">
+
+<img src="https://github.com/wbcai/2020-MSIA423-Cai-Litness-Test/blob/development/figures/spotify_step3.png" width="200">
+
+<img src="https://github.com/wbcai/2020-MSIA423-Cai-Litness-Test/blob/development/figures/spotify_step4.png" width="300">
+
 
 ## Running the app in Docker 
 
