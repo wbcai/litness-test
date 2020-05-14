@@ -28,8 +28,8 @@
 **Mission:** Use music attributes (e.g., tempo, valence, duration) to predict the probability that a given song is a rap/hip-hop song
 
 **Data sources:**
-- List of relevant hip hop songs obtained using the ![Billboard Chart API](https://github.com/guoguo12/billboard-charts)
-- Music attributes gathered from the Spotify API via ![Spotipy Library](https://github.com/plamere/spotipy)
+- List of relevant hip hop songs obtained using the [Billboard Chart API](https://github.com/guoguo12/billboard-charts)
+- Music attributes gathered from the Spotify API via [Spotipy Library](https://github.com/plamere/spotipy)
 
 
 **Success criteria** 
