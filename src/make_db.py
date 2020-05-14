@@ -1,31 +1,15 @@
 import os
 from os import path
-import logging
+import logging.config
+import config
 import sqlalchemy as sql
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base 
 from sqlalchemy import Column, Float, Integer, String, MetaData
 
 
-# Getting the parent directory of this file. That will function as the project home.
-PROJECT_HOME = path.dirname(path.dirname(path.abspath(__file__)))
-
-# Logging
-LOGGING_CONFIG = path.join(PROJECT_HOME, 'config/logging.conf')
-
-# Offline database
-DATABASE_PATH = path.join(PROJECT_HOME, 'data/billboard_spotify.db')
-SQLITE_ENGINE = 'sqlite:////{}'.format(DATABASE_PATH)
-
-# RDS database 
-CONN_TYPE = "mysql+pymysql"
-USER = os.environ.get("MYSQL_USER")
-PASSWORD = os.environ.get("MYSQL_PASSWORD")
-HOST = os.environ.get("MYSQL_HOST")
-PORT = os.environ.get("MYSQL_PORT")
-DATABASE_NAME = os.environ.get("DATABASE_NAME")
-MYSQL_ENGINE = "{}://{}:{}@{}:{}/{}".format(CONN_TYPE, USER, PASSWORD, HOST, PORT, DATABASE_NAME)
-
+logging.config.fileConfig(config.LOGGING_CONFIG)
+logger = logging.getLogger('data_pull')
 
 Base = declarative_base()
 
@@ -59,9 +43,12 @@ class Billboard_Spotify(Base):
 
 
 # Initiate SQLite DB
-sqlite_engine = sql.create_engine(SQLITE_ENGINE)
+sqlite_engine = sql.create_engine(config.SQLITE_ENGINE)
 Base.metadata.create_all(sqlite_engine)
+logger.info("SQLite database created")
+
 
 # set up mysql connection
-mysql_engine = sql.create_engine(MYSQL_ENGINE)
+mysql_engine = sql.create_engine(config.MYSQL_ENGINE)
 Base.metadata.create_all(mysql_engine)
+logger.info("MySQL database created")
