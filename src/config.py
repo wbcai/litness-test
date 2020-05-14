@@ -7,6 +7,14 @@ PROJECT_HOME = path.dirname(path.dirname(path.abspath(__file__)))
 # Logging
 LOGGING_CONFIG = path.join(PROJECT_HOME, 'config/logging.conf')
 
+# Billboard charts parameters
+
+START_YEAR = 2010
+END_YEAR = 2020
+
+RAPSONG_TOPX = 5
+HOT100_TOPX = 5
+
 # Acquire and process config
 # MAX_RECORDS_READ = 100
 BB_HOT100_LOCATION = path.join(PROJECT_HOME,'data/bb_hot100.json')

@@ -261,23 +261,44 @@ def upload_file(file_name, bucket, object_name=None):
 
 if __name__ == "__main__":
 
-	# Get Billboard Hot 100 charts
+	# Get Top Rap charts
 	try:
-		hot100 = get_billboard_charts(chart_name = 'hot-100', top_x = 50)
+		rapsong = get_billboard_charts(start_year = config.START_YEAR, chart_name = 'rap-song', top_x=config.RAPSONG_TOPX)
+		rapsong_df = prep_spotify_query(rapsong)
+	except Exception as e:
+		logger.error("Error occured while fetching BB Top Rap.", e)
+		sys.exit(1)
+
+	try:
+		write_records(rapsong, config.BB_RAPSONG_LOCATION)
+		logger.info("Rap Song chart records saved locally")
+	except FileNotFoundError:
+		logger.error("Please provide a valid file location to persist data.")
+		sys.exit(1)
+
+	upload_file(config.BB_RAPSONG_LOCATION, config.S3_BUCKET_NAME, config.BB_RAPSONG_NAME)
+	logger.info("Rap Song chart records saved to S3")
+
+
+
+	# Get Hot 100 charts
+	try:
+		hot100 = get_billboard_charts(start_year= config.START_YEAR, chart_name = 'hot-100', top_x = config.HOT100_TOPX)
 		hot100_df = prep_spotify_query(hot100)
 	except Exception as e:
 		logger.error("Error occured while fetching BB Hot 100.", e)
 		sys.exit(1)
 
-	
-
-	# Get Billboard Top Rap charts
 	try:
-		rapsong = get_billboard_charts(chart_name = 'rap-song', top_x = 25)
-		rapsong_df = prep_spotify_query(rapsong)
-	except Exception as e:
-		logger.error("Error occured while fetching BB Top Rap.", e)
+		write_records(hot100, config.BB_HOT100_LOCATION)
+		logger.info("Hot 100 chart records saved locally")
+	except FileNotFoundError:
+		logger.error("Please provide a valid file location to persist data.")
 		sys.exit(1)
+
+	upload_file(config.BB_HOT100_LOCATION, config.S3_BUCKET_NAME, config.BB_HOT100_NAME)
+	logger.info("Hot 100 chart records saved to S3")
+	
 
 	# Merge to single dataframe, removing songs from Hot 100 that are also in Top Rap
 	all_df = concat_charts(rapsong_df, hot100_df)
@@ -291,20 +312,15 @@ if __name__ == "__main__":
 
 	# Export data to local folder
 	try:
-		write_records(hot100, config.BB_HOT100_LOCATION)
-		write_records(rapsong, config.BB_RAPSONG_LOCATION)
-
 		spotify_df.to_csv(config.SPOTIFY_LOCATION)
-
-		logger.info("API records saved")
+		logger.info("Spotify metadata saved locally")
 	except FileNotFoundError:
 		logger.error("Please provide a valid file location to persist data.")
 		sys.exit(1)
 
 	# Upload to S3
-	upload_file(config.BB_HOT100_LOCATION, config.S3_BUCKET_NAME, config.BB_HOT100_NAME)
-	upload_file(config.BB_RAPSONG_LOCATION, config.S3_BUCKET_NAME, config.BB_RAPSONG_NAME)
 	upload_file(config.SPOTIFY_LOCATION, config.S3_BUCKET_NAME, config.SPOTIFY_NAME)
+	logger.info("Spotify metadata saved to S3")
 
 
 
