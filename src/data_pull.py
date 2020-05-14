@@ -8,6 +8,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import logging.config 
 import config
 import json
+import boto3
 
 
 logging.config.fileConfig(config.LOGGING_CONFIG)
@@ -204,7 +205,7 @@ def get_spotify_metadata(query_df, cid, secret):
 
 		except:
 			not_found.append(search)
-			logger.warning(search, ' not found')
+			logger.warning('{} not found on Spotify'.format(search))
 			
 	logger.warning("{} songs not found".format(len(not_found)))
 			
@@ -267,6 +268,8 @@ if __name__ == "__main__":
 	except Exception as e:
 		logger.error("Error occured while fetching BB Hot 100.", e)
 		sys.exit(1)
+
+	
 
 	# Get Billboard Top Rap charts
 	try:
