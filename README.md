@@ -108,10 +108,10 @@ Connection to the NU VPN is necessary before continuing on.
 
 ### 3. Pull data from Billboard and Spotify API
 
-To obtain song metadata from the Billboard and Spotify API, run the `get_data.sh` script: 
+To obtain song metadata from the Billboard and Spotify API, run the `run_get_data.sh` script: 
 
 ```bash
-sh get_data.sh
+sh run_get_data.sh
 ```
 Note: Billboard may fail to pull some Hot 100 charts for certain dates. Spotify Web API also may fail to identify certain songs from the Billboard charts. Both are normal occurances. 
 
@@ -120,7 +120,7 @@ Note: Billboard may fail to pull some Hot 100 charts for certain dates. Spotify 
 To create the databases, run the `make_db.sh` script:
 
 ```bash
-sh make_db.sh
+sh run_make_db.sh
 ```
 
 ### 5. Kill the container 
