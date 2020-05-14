@@ -101,9 +101,10 @@ To build the image, run the following bash code from the root directory:
 
 This command builds the Docker image, with the tag `litness`, based on the instructions in `app/Dockerfile` and the files existing in this directory.
  
-### 2. Connect to the NU VPN
+### 2. Connect to NU VPN
 
 Connection to the NU VPN is necessary before continuing on. 
+
 
 ### 3. Pull data from Billboard and Spotify API
 
