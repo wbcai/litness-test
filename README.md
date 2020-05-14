@@ -70,10 +70,11 @@
 │
 ├── app.py                            <- Flask wrapper for running the model 
 ├── requirements.txt                  <- Python package dependencies 
-├── get_data.sh                       <- Script to retrieve Billboard and Spotify data in Docker container
-├── make_db.sh                        <- Script to make offline SQLite and RDS MySQL databases in Docker container
-├── env_config                      <- Template to fill in necessary environment variables
-
+├── env_config                        <- Template to fill in necessary environment variables
+├── Dockerfile                        <- Configurations for Docker image
+├── run_get_data.sh                   <- Script to retrieve Billboard and Spotify data
+├── run_make_db.sh                    <- Script to make offline SQLite and RDS MySQL database
+├── run_mysql_client.sh               <- Script to connect to MySQL database
 ```
 
 ## Setting up environment variables
@@ -85,7 +86,7 @@ The required environment variables are listed in `env_config`. Note: two environ
 
 ### Spotify environment variables
 
-Two environment variables, `SPOTIFY_CID` and `SPOTIFY_SECRET`, are required in order to obtain data from the Spotify Web API. To obtain those variables, you must first create/log into a Spotify user account (Premium or Free). Then go to the [Dashboard](https://developer.spotify.com/dashboard) page at the Spotify Developer website and, if necessary, log in. Accept the latest Developer Terms of Service to complete your account set up.
+Environment variables `SPOTIFY_CID` and `SPOTIFY_SECRET` are required for obtaining data from the Spotify Web API. You must first create a Spotify user account (Premium or Free). Then go to the [Dashboard](https://developer.spotify.com/dashboard) page at the Spotify Developer website and, if necessary, log in. Accept the latest Developer Terms of Service to complete your account set up.
 
 At the Dashboard, you can now create a new Client ID (i.e., a new app). Once you fill in some general information and accept terms and conditions, you land in the app dashboard. Here you can see your Client ID and Client Secret. The Client ID is the environment variable `SPOTIFY_CID` and the Client Secret is the environment variable `SPOTIFY_SECRET`.
 
@@ -117,10 +118,15 @@ Note: Billboard may fail to pull some Hot 100 charts for certain dates. Spotify 
 
 ### 4. Establish local SQLite and RDS MySQL databases
 
-To create the databases, run the `make_db.sh` script:
+To create the databases, run the `run_make_db.sh` script:
 
 ```bash
 sh run_make_db.sh
+```
+To connect to the MySQL database, run the `run_mysql_client.sh` script:
+
+```bash
+sh run_mysql_client.sh
 ```
 
 ### 5. Kill the container 
