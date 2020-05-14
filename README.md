@@ -102,7 +102,7 @@ At the Dashboard, you can now create a new Client ID (i.e., a new app). Once you
 
 ### 1. Build the image 
 
-To build the image, run the following bash code from the root directory: 
+First, make sure Docker Desktop is running. Then to build the image, run the following bash code from the root directory: 
 
 ```bash
  docker build -t litness .
