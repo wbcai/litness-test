@@ -7,8 +7,6 @@ export AWS_DEFAULT_REGION=
 
 export AVC_MYSQL_USER=
 export AVC_MYSQL_PASSWORD=
-
 export AVC_MYSQL_HOST=msia423-bcai.cvomuhyyfy7x.us-east-2.rds.amazonaws.com
-export AVC_MYSQL_PORT=3306
 export AVC_MYSQL_PORT=3306
 export AVC_DATABASE_NAME=db1
