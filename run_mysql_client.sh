@@ -10,6 +10,6 @@ docker run -it \
 --rm \
 mysql:latest \
 mysql \
--h${MYSQL_HOST} \
--u${MYSQL_USER} \
--p${MYSQL_PASSWORD}
+-h${AVC_MYSQL_HOST} \
+-u${AVC_MYSQL_USER} \
+-p${AVC_MYSQL_PASSWORD}
