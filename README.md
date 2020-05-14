@@ -4,10 +4,13 @@
 <!-- toc -->
 - [Project charter](#project-charter)
 - [Directory structure](#directory-structure)
-- [Intialize the database](#initialize-the-database)
+- [Setting up environment variables](#setting-up-environment-variables)
+  * [Spotify environment variables](#spotify-environment-variables)
 - [Running the app in Docker](#running-the-app-in-docker)
   * [1. Build the image](#1-build-the-image)
-  * [2. Run the container](#2-run-the-container)
+  * [2. Connect to NU VPN](#2-connect-to-nu-vpn)
+  * [3. Pull data from Billboard and Spotify API](#3-pull-data-from-billboard-and-spotify-api)
+  * [4. Establish local SQLite and RDS MySQL databases](#4-establish-local-sqlite-and-rds-mysql-databases)
   * [3. Kill the container](#3-kill-the-container)
 - [Backlog](#backlog)
 
@@ -66,47 +69,68 @@
 ├── test/                             <- Files necessary for running model tests (see documentation below) 
 │
 ├── app.py                            <- Flask wrapper for running the model 
-├── run.py                            <- Simplifies the execution of one or more of the src scripts  
 ├── requirements.txt                  <- Python package dependencies 
+├── get_data.sh                       <- Script to retrieve Billboard and Spotify data in Docker container
+├── make_db.sh                        <- Script to make offline SQLite and RDS MySQL databases in Docker container
+├── env_config                      <- Template to fill in necessary environment variables
+
 ```
 
-## Initialize the database
+## Setting up environment variables
 
+The required environment variables are listed in `env_config`. Note: two environment variables require a Spotify account. Please see section below on instructions for obtaining those variables. After completing the env_config file, set the environment variables in your `~/.bashrc` with the following bash commands:
+
+    echo 'source env_config' >> ~/.bashrc
+    source ~/.bashrc 
+
+### Spotify environment variables
+
+Two environment variables, `SPOTIFY_CID` and `SPOTIFY_SECRET`, are required in order to obtain data from the Spotify Web API. To obtain those variables, you must first create/log into a Spotify user account (Premium or Free). Then go to the [Dashboard](https://developer.spotify.com/dashboard) page at the Spotify Developer website and, if necessary, log in. Accept the latest Developer Terms of Service to complete your account set up.
+
+At the Dashboard, you can now create a new Client ID (i.e., a new app). Once you fill in some general information and accept terms and conditions, you land in the app dashboard. Here you can see your Client ID and Client Secret. The Client ID is the environment variable `SPOTIFY_CID` and the Client Secret is the environment variable `SPOTIFY_SECRET`.
 
 ## Running the app in Docker 
 
 ### 1. Build the image 
 
-The Dockerfile for running the flask app is in the `app/` folder. To build the image, run from this directory (the root of the repo): 
+To build the image, run the following bash code from the root directory: 
 
 ```bash
- docker build -f app/Dockerfile -t pennylane .
+ docker build -t litness .
 ```
 
-This command builds the Docker image, with the tag `pennylane`, based on the instructions in `app/Dockerfile` and the files existing in this directory.
+This command builds the Docker image, with the tag `litness`, based on the instructions in `app/Dockerfile` and the files existing in this directory.
  
-### 2. Run the container 
+### 2. Connect to the NU VPN
 
-To run the app, run from this directory: 
+Connection to the NU VPN is necessary before continuing on. 
+
+### 3. Pull data from Billboard and Spotify API
+
+To obtain song metadata from the Billboard and Spotify API, run the `get_data.sh` script: 
 
 ```bash
-docker run -p 5000:5000 --name test pennylane
+sh get_data.sh
 ```
-You should now be able to access the app at http://0.0.0.0:5000/ in your browser.
+Note: Billboard may fail to pull some Hot 100 charts for certain dates. Spotify Web API also may fail to identify certain songs from the Billboard charts. Both are normal occurances. 
 
-This command runs the `pennylane` image as a container named `test` and forwards the port 5000 from container to your laptop so that you can access the flask app exposed through that port. 
+### 4. Establish local SQLite and RDS MySQL databases
 
-If `PORT` in `config/flaskconfig.py` is changed, this port should be changed accordingly (as should the `EXPOSE 5000` line in `app/Dockerfile`)
+To create the databases, run the `make_db.sh` script:
 
-### 3. Kill the container 
+```bash
+sh make_db.sh
+```
+
+### 5. Kill the container 
 
 Once finished with the app, you will need to kill the container. To do so: 
 
 ```bash
-docker kill test 
+docker kill litness 
 ```
 
-where `test` is the name given in the `docker run` command.
+where `litness` is the name given in the `docker run` command.
 
 ## Backlog
 
@@ -140,7 +164,7 @@ where `test` is the name given in the `docker run` command.
 - Create tool to take in new songs and predict the era that the song was created
   - Bring model into production
     - Create virtual environment with necessary packages (M)
-    - As a user, I want to be able to type in a hip hop song and have the model predict what era the song came from (L)
+    - As a user, I want to be able to type in a song and have the model predict the probability that the song is of rap/hip-hop genre (L)
   - Test robustness of model
     - Test edge cases (e.g., Spotify does not have attributes of specific songs)  (L)
     - Evaluate model accuracy (M)
