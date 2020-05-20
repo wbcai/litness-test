@@ -28,7 +28,7 @@ SPOTIFY_CID = os.environ.get("SPOTIFY_CID")
 SPOTIFY_SECRET = os.environ.get("SPOTIFY_SECRET")
 
 # S3
-S3_BUCKET_NAME = 'wbc881bk1'
+S3_BUCKET_NAME = os.environ.get("AWS_BUCKET")
 BB_HOT100_NAME = 'bb_hot100.json'
 BB_RAPSONG_NAME = 'bb_rapsong.json'
 SPOTIFY_NAME = 'spotify.csv'
