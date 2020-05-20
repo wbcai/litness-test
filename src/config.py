@@ -33,6 +33,9 @@ BB_HOT100_NAME = 'bb_hot100.json'
 BB_RAPSONG_NAME = 'bb_rapsong.json'
 SPOTIFY_NAME = 'spotify.csv'
 
+# Boolean variable for creation of local database instead of on RDS
+OFFLINE_DB_FLAG = True 
+
 # SQLite database
 DATABASE_PATH = path.join(PROJECT_HOME, 'data/billboard_spotify.db')
 SQLITE_ENGINE = 'sqlite:////{}'.format(DATABASE_PATH)

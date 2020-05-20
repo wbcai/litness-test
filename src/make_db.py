@@ -41,14 +41,13 @@ class Billboard_Spotify(Base):
 		song_repr = "<Chart(song='%s', artist='%s', chart='%s', date='%s')>"
 		return song_repr % (self.song, self.artist, self.chart, self.date)
 
-
-# Initiate SQLite DB
-sqlite_engine = sql.create_engine(config.SQLITE_ENGINE)
-Base.metadata.create_all(sqlite_engine)
-logger.info("SQLite database created")
-
-
-# set up mysql connection
-mysql_engine = sql.create_engine(config.MYSQL_ENGINE)
-Base.metadata.create_all(mysql_engine)
-logger.info("MySQL database created")
+if config.OFFLINE_DB_FLAG:
+	# Initiate SQLite DB
+	sqlite_engine = sql.create_engine(config.SQLITE_ENGINE)
+	Base.metadata.create_all(sqlite_engine)
+	logger.info("SQLite database created")
+else:
+	# set up mysql connection
+	mysql_engine = sql.create_engine(config.MYSQL_ENGINE)
+	Base.metadata.create_all(mysql_engine)
+	logger.info("MySQL database created")
