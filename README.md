@@ -1,5 +1,5 @@
 # Litness Test
-## Building a Classifier to Identify Rap/Hip-Hop Songs from Other Mainstream Music Genres
+## Classifier for Identifying Rap/Hip-Hop Influences from Mainstream Music
 ### Author: Brian Cai
 ### QA: Jake Atlas
 
