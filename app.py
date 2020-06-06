@@ -1,11 +1,13 @@
 import traceback
 from flask import render_template, request, redirect, url_for
 import logging.config
-# from app.models import Tracks
 from flask import Flask
-from src.add_songs import Tracks
+from src.predict_score import *
+from src.update_db import Litness
 from flask_sqlalchemy import SQLAlchemy
+import config
 
+import pickle
 
 # Initialize the Flask application
 app = Flask(__name__, template_folder="app/templates")
@@ -22,6 +24,8 @@ logger.debug('Test log')
 # Initialize the database
 db = SQLAlchemy(app)
 
+# Import pre-trained model
+model = pickle.load(open(config.MODEL_PATH, "rb" ))
 
 @app.route('/')
 def index():
@@ -33,9 +37,8 @@ def index():
     Returns: rendered html template
 
     """
-
     try:
-        tracks = db.session.query(Tracks).limit(app.config["MAX_ROWS_SHOW"]).all()
+        tracks = db.session.query(Litness).limit(app.config["MAX_ROWS_SHOW"]).all()
         logger.debug("Index page accessed")
         return render_template('index.html', tracks=tracks)
     except:
@@ -43,19 +46,22 @@ def index():
         logger.warning("Not able to display tracks, error page returned")
         return render_template('error.html')
 
-
 @app.route('/add', methods=['POST'])
-def add_entry():
+def add_prediction():
     """View that process a POST with new song input
 
     :return: redirect to index page
     """
 
     try:
-        track1 = Tracks(artist=request.form['artist'], album=request.form['album'], title=request.form['title'])
-        db.session.add(track1)
+        search = request.form['search']
+        logger.info("%s captured from search", search)
+        prediction = make_prediction(search, model)
+        logger.info("Prediction made: {}".format(prediction['score']))
+        entry = Litness(title=prediction['title'], artist=prediction['artist'], score=prediction['score'])
+        db.session.add(entry)
         db.session.commit()
-        logger.info("New song added: %s by %s", request.form['title'], request.form['artist'])
+        logger.info("New song added: %s by %s", prediction['title'], prediction['artist'])
         return redirect(url_for('index'))
     except:
         logger.warning("Not able to display tracks, error page returned")

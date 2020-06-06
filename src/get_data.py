@@ -14,7 +14,7 @@ import boto3
 
 
 logging.config.fileConfig(config.LOGGING_CONFIG)
-logger = logging.getLogger('data_pull')
+logger = logging.getLogger('get_data')
 
 def get_billboard_charts(start_year = 1990, end_year = 2020, chart_name = 'rap-song', top_x = 25):
 	
@@ -56,39 +56,33 @@ def get_billboard_charts(start_year = 1990, end_year = 2020, chart_name = 'rap-s
 		query_dates.extend(cur_year_dates)
 		
 	# Fetch chart data from Billboard API
-
 	retry = [] # Unsuccessful queries from first try
 	query_results = [] # Results from query
 	unsuccessful = [] # Final queries not successful after second try 
 	
 	
 	for qdate in query_dates:
-		
 		try:
 			chart = billboard.ChartData(chart_name, date = qdate)
 			results = [[chart[i].artist, chart[i].title, qdate, chart_name] for i in range(0, top_x)]
 			query_results.extend(results)
 			
 			logger.info("{} on {} recorded".format(chart_name, qdate))
-
 		except:
 			retry.append(qdate) # if unsuccessfull, add to retry list
 			logger.warning('{} on {} not found'.format(chart_name, qdate))
 	
 	for qdate in retry:
-		
 		try:
 			chart = billboard.ChartData(chart_name, date = qdate)
 			results = [[chart[i].artist, chart[i].title, qdate, chart_name] for i in range(0, top_x)]
 			query_results.extend(results)
 			logger.info("{} on {} recorded".format(chart_name, qdate))
-
 		except:
 			unsuccessful.append(qdate) # if unsuccessfull, add to retry list
 			logger.warning('{} on {} not found after second try'.format(chart_name, qdate))
 			
 	logger.warning("{} unsuccessful queries for {}".format(len(unsuccessful), chart_name))
-	
 	return query_results
 
 
@@ -110,9 +104,7 @@ def prep_spotify_query(query_results):
 							.groupby(['artist', 'track']).head(1)
 							.reset_index(drop = True))
 	
-	
 	# Remove parts of the song/artist name that can prevent a successful Spotify query
-	
 	results_df['artist_q'] = results_df.artist.str.split(' Feat', 1).str[0]
 	results_df['artist_q'] = results_df.artist_q.str.split('\(Feat', 1).str[0]
 	results_df['artist_q'] = results_df.artist_q.str.split(' &', 1).str[0]
@@ -121,6 +113,7 @@ def prep_spotify_query(query_results):
 	results_df['artist_q'] = results_df.artist_q.str.split(" Tell 'em", 1).str[0]
 	results_df['artist_q'] = results_df.artist_q.str.replace(' X ', ' ')
 	results_df['artist_q'] = results_df.artist_q.str.replace(" Co-Starring ", " ")
+	results_df['artist_q'] = results_df.artist_q.str.replace(",", "")
 	results_df['artist_q'] = results_df.artist_q.str.replace("F/", "")
 	results_df['artist_q'] = results_df.artist_q.str.replace(' Duet With ', ' ')
 	results_df['track_q'] = results_df.track.str.split(" \(", 1).str[0]
@@ -130,7 +123,6 @@ def prep_spotify_query(query_results):
 	
 	# Create final query column
 	results_df['spotify_query'] = (results_df.artist_q + ' ' + results_df.track_q).str.replace(' ', '+')
-	
 	results_df.drop(['artist_q', 'track_q'], axis = 1, inplace = True)
 	
 	return results_df
@@ -154,7 +146,6 @@ def concat_charts(genre, overall):
 	
 	# Remove tracks from overall chart that's also in the genre-specific chart
 	overall_rm_genre = overall.loc[~overall.artist_track.isin(genre.artist_track.values.tolist())]
-	
 	overall_len = len(overall)
 	overall_len_rm = len(overall_rm_genre)
 
@@ -187,7 +178,6 @@ def get_spotify_metadata(query_df, cid, secret):
 	client_credentials_manager = SpotifyClientCredentials(client_id=cid, client_secret=secret)
 	sp = spotipy.Spotify(client_credentials_manager = client_credentials_manager)
 
-	
 	search_list = query_df['spotify_query'].values.tolist()
 	
 	query_found = []
@@ -196,7 +186,6 @@ def get_spotify_metadata(query_df, cid, secret):
 	
 	# Fetch track metadata from Spotify
 	for search in search_list:
-
 		try:
 			query = sp.search(search)
 			song_id = query['tracks']['items'][0]['id']
@@ -204,7 +193,6 @@ def get_spotify_metadata(query_df, cid, secret):
 			query_found.append(search)
 			audio_feature = sp.audio_features(song_id)[0]
 			audio_features.append(audio_feature)
-
 		except:
 			not_found.append(search)
 			logger.warning('{} not found on Spotify'.format(search))
@@ -213,7 +201,6 @@ def get_spotify_metadata(query_df, cid, secret):
 			
 	spotify_features = pd.DataFrame(audio_features)
 	spotify_features['spotify_query'] = query_found
-	
 	results = query_df.merge(spotify_features, on = 'spotify_query')
 	
 	return results

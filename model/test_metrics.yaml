@@ -1,0 +1,6 @@
+baseline_precision: 0.45
+baseline_recall: 1.0
+baseline_roc: 0.5
+test_precision: 0.84
+test_recall: 0.77
+test_roc: 0.91
