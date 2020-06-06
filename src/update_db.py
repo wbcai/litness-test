@@ -10,8 +10,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base 
 from sqlalchemy import Column, Float, Integer, String, MetaData
 
+logging.config.fileConfig(config.LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
-logger.setLevel("INFO")
 
 Base = declarative_base()
 

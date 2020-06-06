@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="static/basic.css" rel="stylesheet">
+    <link href="app/static/basic.css" rel="stylesheet">
 </head>
 
 <body>
@@ -36,6 +36,9 @@
         <input type=submit value=Search>
       </dl>
     </form>
+    {% if error %}
+    <p class=error><strong>Error:</strong> {{ error }}
+    {% endif %}
 
 </body>
 </html>
