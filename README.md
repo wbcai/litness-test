@@ -94,13 +94,13 @@
 ├── run.py                            <- Script to run each component of the model pipline and make predictions
 ```
 
-## Setting up environment variables
+# Setting up environment variables
 
 The required environment variables are listed in `env_config`. Note: two environment variables require a Spotify account. Please see section below on instructions for obtaining those variables. After completing the env_config file, set the environment variables following bash commands:
 
     source env_config
 
-### Spotify environment variables
+## Spotify environment variables
 
 Environment variables `SPOTIFY_CID` and `SPOTIFY_SECRET` are required for obtaining data from the Spotify Web API. You must first create a Spotify user account (Premium or Free). Then go to the [Dashboard](https://developer.spotify.com/dashboard) page at the Spotify Developer website and, if necessary, log in. Accept the latest Developer Terms of Service to complete your account set up.
 
@@ -113,8 +113,44 @@ At the Dashboard, you can now create a new Client ID (i.e., a new app). Once you
 
 <img src="https://github.com/wbcai/2020-MSIA423-Cai-Litness-Test/blob/development/figures/spotify_step4.png" width="300">
 
+## Extracting data from Billboard and Spotify
 
-## Running the app in Docker 
+To extract the data necessary for the modeling pipeline, run the following command:
+
+    python run.py create_dataset
+
+The data will be saved in ```data/``` and in your designated AWS S3 bucket. Note: it is common for unsuccessful queries from the Billboard API for certain dates. It is even more common for the Spotify API to not have music attributes for some of the Billboard songs.
+
+## Executing model pipeline
+
+Once you extracted and saved the Billboard and Spotify dataset in S3, you can execute the entire model pipeline with the following command:
+
+    make pipeline
+
+You can also execute each step of the model pipeline with ```run.py``` for more configurations.
+
+To download the extracted dataset from S3:
+    
+    python3 run.py download_data
+    
+To train model, save model object to ```/model```, and generate model metrics:
+
+    python3 run.py train_model
+   
+To create a database for saving model predictions:
+
+    run.py create_db
+    
+This creates a table in SQLite in ```/data```. 
+To create a table in MySQL with the credentials provided in ```env_config```:
+
+    run.py create_db --engine MySQL
+
+To create a table in a specified engine URI:
+
+    run.py create_db --uri [your engine URI]
+
+### Running the app in Docker 
 
 ### 1. Build the image 
 
@@ -125,10 +161,6 @@ First, make sure Docker Desktop is running. Then to build the image, run the fol
 ```
 
 This command builds the Docker image, with the tag `litness`, based on the instructions in `app/Dockerfile` and the files existing in this directory.
- 
-### 2. Connect to NU VPN
-
-Connection to the NU VPN is necessary before continuing on. 
 
 
 ### 3. Pull data from Billboard and Spotify API
