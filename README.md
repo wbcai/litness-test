@@ -119,7 +119,7 @@ To extract the data necessary for the modeling pipeline, run the following comma
 
     python run.py create_dataset
 
-The data will be saved in ```data/``` and in your designated AWS S3 bucket. Note: it is common for unsuccessful queries from the Billboard API for certain dates. It is even more common for the Spotify API to not have music attributes for some of the Billboard songs.
+The data will be saved in `data/` and in your designated AWS S3 bucket. Note: it is common for unsuccessful queries from the Billboard API for certain dates. It is even more common for the Spotify API to not have music attributes for some of the Billboard songs.
 
 ## Executing model pipeline
 
@@ -127,13 +127,13 @@ Once you extracted and saved the Billboard and Spotify dataset in S3, you can ex
 
     make pipeline
 
-You can also execute each step of the model pipeline with ```run.py``` for more configurations.
+You can also execute each step of the model pipeline with `run.py` for more configurations.
 
 To download the extracted dataset from S3:
     
     python3 run.py download_data
     
-To train model, save model object to ```/model```, and generate model metrics:
+To train model, save model object to `/model`, and generate model metrics:
 
     python3 run.py train_model
    
@@ -141,14 +141,17 @@ To create a database for saving model predictions:
 
     run.py create_db
     
-This creates a table in SQLite in ```/data```. 
-To create a table in MySQL with the credentials provided in ```env_config```:
+There are two optional arguments that you can include with `create_db`:
+- `--engine` or `-e`: Specify whether to create a `SQLite` database in `/data` or `MySQL` database using AWS RDD credentials configured in `env_config`; default is `SQLite`
+- `--uri` or `-u`: Specify specific engine URI; this overwrites the `-engine` arguement. 
 
-    run.py create_db --engine MySQL
+To validate pipeline and ensure all components are present for making predictions:
 
-To create a table in a specified engine URI:
+    run.py validate
 
-    run.py create_db --uri [your engine URI]
+To reset pipeline (i.e., delete files in `/data` and `/model`):
+
+    make clear
 
 ### Running the app in Docker 
 
