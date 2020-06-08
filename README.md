@@ -84,22 +84,21 @@
 │
 ├── test/                             <- Files necessary for running model tests 
 │
-├── app.py                            <- Flask wrapper for running the model
-├── docker_build.sh                   <- Script to retrieve Billboard and Spotify data
-├── requirements.txt                  <- Python package dependencies 
-├── env_config                        <- Template to fill in necessary environment variables
+├── app.py                            <- Flask wrapper for application
+├── docker_build.sh                   <- Script to build model pipeline Docker image
+├── docker_pipeline.sh                <- Script to execute model pipeline in Docker
 ├── Dockerfile                        <- Configurations for Docker image
-├── run_get_data.sh                   <- Script to retrieve Billboard and Spotify data
-├── run_make_db.sh                    <- Script to make offline SQLite and RDS MySQL database
-├── run_mysql_client.sh               <- Script to connect to MySQL database
+├── env_config                        <- Template to fill in necessary environment variables
+├── Makefile                          <- Execution of model pipeline
+├── requirements.txt                  <- Python package dependencies 
+├── run.py                            <- Script to run each component of the model pipline and make predictions
 ```
 
 ## Setting up environment variables
 
-The required environment variables are listed in `env_config`. Note: two environment variables require a Spotify account. Please see section below on instructions for obtaining those variables. After completing the env_config file, set the environment variables in your `~/.bashrc` with the following bash commands:
+The required environment variables are listed in `env_config`. Note: two environment variables require a Spotify account. Please see section below on instructions for obtaining those variables. After completing the env_config file, set the environment variables following bash commands:
 
-    echo 'source env_config' >> ~/.bashrc
-    source ~/.bashrc 
+    source env_config
 
 ### Spotify environment variables
 
