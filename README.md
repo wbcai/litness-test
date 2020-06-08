@@ -154,7 +154,21 @@ You can make a prediction and save it to your database with the following comman
     
 Without additional arguements, predictions are saved in the local SQLite database. `--engine` or `--uri` can be used to specify where to save the predictions.
 
-### Running the app in Docker 
+## Running the application
+
+After creating the model and database, you can now run the application:
+
+    python3 app.py
+
+You should now be able to access the app at http://0.0.0.0:5000/ in your browser.
+
+By default, the app will use the MySQL database with credentials in ```env_config```. To use another database URI, first save the database URI as environment variable `SQLALCHEMY_DATABASE_URI`, then initialize the database:
+
+    python3 run.py create_db --uri '[your database URI]'
+    
+
+
+## Running pipeline and app in Docker
 
 ### 1. Build the image 
 
