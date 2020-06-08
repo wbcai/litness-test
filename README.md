@@ -136,7 +136,7 @@ To create a database for saving model predictions:
     
 There are two optional arguments that you can include with `create_db`:
 - `--engine` or `-e`: Specify whether to create a `SQLite` database in `/data` or `MySQL` database using AWS RDD credentials configured in `env_config`; default is `SQLite`
-- `--uri` or `-u`: Specify specific engine URI; this overwrites the `-engine` argument. 
+- `--uri` or `-u`: Specify specific engine URI; this overwrites the `--engine` argument. 
 
 To validate pipeline and ensure all components are present for making predictions:
 
@@ -166,11 +166,9 @@ By default, the app will use the MySQL database with credentials in ```env_confi
 
     python3 run.py create_db --uri '[your database URI]'
     
-
-
 ## Running pipeline and app in Docker
 
-### 1. Build the image 
+### Pipeline
 
 First, make sure Docker Desktop is running. Then to build the image, run the following bash code from the root directory: 
 
@@ -180,32 +178,28 @@ First, make sure Docker Desktop is running. Then to build the image, run the fol
 
 This command builds the Docker image, with the tag `litness`, based on the instructions in `app/Dockerfile` and the files existing in this directory.
 
-
-### 3. Pull data from Billboard and Spotify API
-
-To obtain song metadata from the Billboard and Spotify API, run the `run_get_data.sh` script: 
+To run the pipeline, execute the following script: 
 
 ```bash
-sh run_get_data.sh
+sh docker_pipeline.sh
 ```
-Note: Billboard may fail to pull some Hot 100 charts for certain dates. Spotify Web API also may fail to identify certain songs from the Billboard charts. Both are normal occurances. 
 
-### 4. Establish local SQLite and RDS MySQL databases
+### Application
 
-To create the databases, run the `run_make_db.sh` script:
+To build the image, execute the following bash code from the root directory:
 
 ```bash
-sh run_make_db.sh
+docker build -f app/Dockerfile -t litness .
 ```
-To connect to the MySQL database, run the `run_mysql_client.sh` script:
+To run the application, execute the following script:
 
 ```bash
-sh run_mysql_client.sh
+sh app/docker_run.sh 
 ```
 
-### 5. Kill the container 
+### Kill the container 
 
-Once finished with the app, you will need to kill the container. To do so: 
+Once finished with either pipeline or application, you will need to kill the container. To do so: 
 
 ```bash
 docker kill litness 
