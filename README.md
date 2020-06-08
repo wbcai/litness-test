@@ -124,15 +124,15 @@ Once you extracted and saved the Billboard and Spotify dataset in S3, you can ex
 
 You can also execute each step of the model pipeline with `run.py` for more configurations.
 
-To download the extracted dataset from S3:
+### Download the extracted dataset from S3:
     
     python3 run.py download_data
     
-To train model, save model object to `/model`, and generate model metrics:
+### Train model, save model object to `/model`, and generate model metrics:
 
     python3 run.py train_model
    
-To create a database for saving model predictions:
+### Create a database for saving model predictions:
 
     python3 run.py create_db
     
@@ -140,11 +140,11 @@ There are two optional arguments that you can include with `create_db`:
 - `--engine` or `-e`: Specify whether to create a `SQLite` database in `/data` or `MySQL` database using AWS RDD credentials configured in `env_config`; default is `SQLite`
 - `--uri` or `-u`: Specify specific engine URI; this overwrites the `--engine` argument. 
 
-To validate pipeline and ensure all components are present for making predictions:
+### Validate pipeline and ensure all components are present for making predictions:
 
     python3 run.py validate
 
-To reset pipeline (i.e., delete files in `/data` and `/model`):
+### Reset pipeline (i.e., delete files in `/data` and `/model`):
 
     make clear
 
