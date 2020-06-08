@@ -94,32 +94,25 @@
 ├── run.py                            <- Script to run each component of the model pipline and make predictions
 ```
 
-# Setting up environment variables
+## Setting up environment variables
 
 The required environment variables are listed in `env_config`. Note: two environment variables require a Spotify account. Please see section below on instructions for obtaining those variables. After completing the env_config file, set the environment variables following bash commands:
 
     source env_config
 
-## Spotify environment variables
+### Spotify environment variables
 
 Environment variables `SPOTIFY_CID` and `SPOTIFY_SECRET` are required for obtaining data from the Spotify Web API. You must first create a Spotify user account (Premium or Free). Then go to the [Dashboard](https://developer.spotify.com/dashboard) page at the Spotify Developer website and, if necessary, log in. Accept the latest Developer Terms of Service to complete your account set up.
 
-At the Dashboard, you can now create a new Client ID (i.e., a new app). Once you fill in some general information and accept terms and conditions, you land in the app dashboard. Here you can see your Client ID and Client Secret. The Client ID is the environment variable `SPOTIFY_CID` and the Client Secret is the environment variable `SPOTIFY_SECRET`.
-<img src="https://github.com/wbcai/2020-MSIA423-Cai-Litness-Test/blob/development/figures/spotify_step1.png" width="600">
-
-<img src="https://github.com/wbcai/2020-MSIA423-Cai-Litness-Test/blob/development/figures/spotify_step2.png" width="200">
-
-<img src="https://github.com/wbcai/2020-MSIA423-Cai-Litness-Test/blob/development/figures/spotify_step3.png" width="200">
-
-<img src="https://github.com/wbcai/2020-MSIA423-Cai-Litness-Test/blob/development/figures/spotify_step4.png" width="300">
+At the Dashboard, you can now create a new Client ID (i.e., a new app). Once you fill in some general information and accept terms and conditions, you land in the app dashboard. Here you can see your Client ID and Client Secret. The Client ID is the environment variable `SPOTIFY_CID` and the Client Secret is the environment variable `SPOTIFY_SECRET`. For screenshots of these directions, please see `/figures`.
 
 ## Extracting data from Billboard and Spotify
 
 To extract the data necessary for the modeling pipeline, run the following command:
 
-    python run.py create_dataset
+    python3 run.py create_dataset
 
-The data will be saved in `data/` and in your designated AWS S3 bucket. Note: it is common for unsuccessful queries from the Billboard API for certain dates. It is even more common for the Spotify API to not have music attributes for some of the Billboard songs.
+The data will be saved in `data/` and in your designated AWS S3 bucket. Note: it is common to have unsuccessful queries from the Billboard API for certain dates. It is even more common for the Spotify API to not have music attributes for songs from Billboard charts.
 
 ## Executing model pipeline
 
@@ -139,19 +132,27 @@ To train model, save model object to `/model`, and generate model metrics:
    
 To create a database for saving model predictions:
 
-    run.py create_db
+    python3 run.py create_db
     
 There are two optional arguments that you can include with `create_db`:
 - `--engine` or `-e`: Specify whether to create a `SQLite` database in `/data` or `MySQL` database using AWS RDD credentials configured in `env_config`; default is `SQLite`
-- `--uri` or `-u`: Specify specific engine URI; this overwrites the `-engine` arguement. 
+- `--uri` or `-u`: Specify specific engine URI; this overwrites the `-engine` argument. 
 
 To validate pipeline and ensure all components are present for making predictions:
 
-    run.py validate
+    python3 run.py validate
 
 To reset pipeline (i.e., delete files in `/data` and `/model`):
 
     make clear
+
+## Make and save predictions
+
+You can make a prediction and save it to your database with the following command:
+
+    python3 run.py predict --search ['Song to predict']
+    
+Without additional arguements, predictions are saved in the local SQLite database. `--engine` or `--uri` can be used to specify where to save the predictions.
 
 ### Running the app in Docker 
 
