@@ -22,23 +22,29 @@
 
 **Scenario:**
 - We are data science consultants at Spotify; with our proprietary music information retrieval (MIR) platform, we develop data-driven solutions to tackle problems in the music industry
-- Hip hop is perhaps the most dynamic and influential music genres that exists today – it challenges social norms and pushes creativity in music production, and revitalize music across all genres and time periods through sampling 
-- A record label has approached Spotify to help them expand their rap/hip-hop division 
+- Rap/Hip-Hop is perhaps the most dynamic and influential music genres that exists today – it challenges social norms and pushes creativity in music production, and revitalize music across all genres and time periods through sampling 
+- A record label has approached Spotify to help them expand their Rap/Hip-Hop division 
 
-**Vision:** Because the label receives hundreds of music files everyday, they are looking for an automated way to prioritize the review of songs with rap/hip-hop influences 
+**Vision:** Because the label receives hundreds of music files everyday, they are looking for an automated way to prioritize the review of songs with more Rap/Hip-Hop influences 
 
 **Mission:** Use music attributes (e.g., tempo, valence, duration) to predict the probability that a given song is a rap/hip-hop song
 
 **Data sources:**
-- List of relevant hip hop songs obtained using the [Billboard Chart API](https://github.com/guoguo12/billboard-charts)
-- Music attributes gathered from the Spotify API via [Spotipy Library](https://github.com/plamere/spotipy)
-
+- List of relevant songs and labels using the [Billboard Chart API](https://github.com/guoguo12/billboard-charts)
+  - Charts to obtain songs and genre labels
+    - Billboard Hot 100 (Non-Rap/Hip-Hop)
+    - Billboard Rap Song (Rap/Hip-Hop)
+  - Span: 2000 to 2020, bi-monthly (1st and 15th of every month)
+  - Any song that appears in both charts are labeled as Rap/Hip-Hop
+- Music attributes from the Spotify API via [Spotipy Library](https://github.com/plamere/spotipy)
+  - Attributes: energy, key, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence, tempo, duration_ms
+  - Details of these attributes can be found in the [Spotify API Documentation](https://developer.spotify.com/documentation/web-api/reference/tracks/get-audio-features/)
 
 **Success criteria** 
 - Model success metric: AUC-ROC curve
 - Business success:
-  - Ranked list of a given pool of songs, from most likely to have rap/hip-hop influences
-  - Provide insights on the most influential attributes for identifying rap/hip-hop songs
+  - Ranked list of a given pool of songs, from most likely to have Rap/Hip-Hop influences
+  - Provide insights on the most influential attributes for identifying Rap/Hip-Hop songs
 
 
     
@@ -46,9 +52,19 @@
 
 ```
 ├── README.md                         <- You are here
+├── app/                              <- Directory for application components
+│   ├── docker_build.sh               <- Bash script for creating application Docker image
+│   ├── docker_run.sh                 <- Bash script for running app Docker container
+│   ├── Dockerfile                    <- Configurations for app Docker image
+│   ├── templates/                    <- Directory for app templates
+│   │   ├── error.html                <- Error template when app cannot connect to database
+│   │   ├── index.html                <- Main application template
+│
 ├── config                            <- Directory for configuration files 
-│   ├── local/                        <- Directory for keeping environment variables and other local configurations that *do not sync** to Github 
+│   ├── flaskconfig.py                <- Configuration of application
 │   ├── logging.config                <- Configuration of python logger
+│   ├── pipelineconfig.py             <- Configuration of modeling pipeline
+│   ├── testconfig.py                 <- Configuration of pipeline validation
 │
 ├── data                              <- Folder that contains data used or generated. 
 │
@@ -58,19 +74,18 @@
 │
 ├── models/                           <- Trained model objects (TMOs), model predictions, and/or model summaries
 │
-├── notebooks/
-│   ├── archive/                      <- Develop notebooks no longer being used.
-│   ├── deliver/                      <- Notebooks shared with others / in final state
-│   ├── develop/                      <- Current notebooks being used in development.
-│   ├── template.ipynb                <- Template notebook for analysis with useful imports, helper functions, and SQLAlchemy setup. 
-│
-├── reference/                        <- Any reference material relevant to the project
+├── notebooks/                        <- Notebookes used in development
 │
 ├── src/                              <- Source data for the project 
+│   ├── get_data.py                   <- Functions to extract data from APIs
+│   ├── predict_score.py              <- Functions to predict probability of a given song
+│   ├── train_model.py                <- Functions to train/save predictive model and generate model metrics
+│   ├── update_db.py                  <- Functions to create database and save predictions
 │
-├── test/                             <- Files necessary for running model tests (see documentation below) 
+├── test/                             <- Files necessary for running model tests 
 │
-├── app.py                            <- Flask wrapper for running the model 
+├── app.py                            <- Flask wrapper for running the model
+├── docker_build.sh                   <- Script to retrieve Billboard and Spotify data
 ├── requirements.txt                  <- Python package dependencies 
 ├── env_config                        <- Template to fill in necessary environment variables
 ├── Dockerfile                        <- Configurations for Docker image
