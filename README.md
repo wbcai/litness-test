@@ -15,6 +15,7 @@
 - [Running pipeline and app in Docker](#Running-pipeline-and-app-in-Docker)
   * [Pipeline](#Pipeline)
   * [Application](#Application)
+  * [Kill the container](#Kill-the-container) 
 - [Backlog](#backlog)
 
 <!-- tocstop -->
