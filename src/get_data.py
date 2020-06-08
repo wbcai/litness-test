@@ -8,13 +8,13 @@ import pandas as pd
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import logging.config 
-import config
+import config.pipelineconfig as config
 import json
 import boto3
 
 
 logging.config.fileConfig(config.LOGGING_CONFIG)
-logger = logging.getLogger('get_data')
+logger = logging.getLogger('__name__')
 
 def get_billboard_charts(start_year = 1990, end_year = 2020, chart_name = 'rap-song', top_x = 25):
 	
@@ -248,7 +248,7 @@ def upload_file(file_name, bucket, object_name=None):
 	return True
 
 
-if __name__ == "__main__":
+def create_dataset():
 
 	# Get Top Rap charts
 	try:
@@ -310,6 +310,4 @@ if __name__ == "__main__":
 	# Upload to S3
 	upload_file(config.SPOTIFY_LOCATION, config.S3_BUCKET_NAME, config.SPOTIFY_NAME)
 	logger.info("Spotify metadata saved to S3")
-
-
 

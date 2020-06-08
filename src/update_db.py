@@ -4,17 +4,16 @@ import yaml
 import os
 
 import logging.config
-import config
+import config.pipelineconfig as config
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base 
 from sqlalchemy import Column, Float, Integer, String, MetaData
 
 logging.config.fileConfig(config.LOGGING_CONFIG)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("__name__")
 
 Base = declarative_base()
-
 class Litness(Base):
 
 	"""Create a data model for the database to be set up for capturing songs from Billboard charts """

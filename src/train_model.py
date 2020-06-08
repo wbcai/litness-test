@@ -1,13 +1,12 @@
 import pandas as pd
 import numpy as np
 import pickle
-import logging.config
+import logging
 import yaml
 import boto3
-import os.path
 from os import path
 
-import config.modelconfig as config
+import config.pipelineconfig as config
 
 from sklearn.preprocessing import LabelEncoder 
 from sklearn.preprocessing import OneHotEncoder 
@@ -17,7 +16,7 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.ensemble import RandomForestClassifier
 
 logging.config.fileConfig(config.LOGGING_CONFIG)
-logger = logging.getLogger('train_model')
+logger = logging.getLogger('__name__')
 
 def download_data(bucket_name, object_name, save_path):
 	""" Download model data from S3 bucket
@@ -28,7 +27,10 @@ def download_data(bucket_name, object_name, save_path):
 	"""
 
 	s3 = boto3.client('s3')
-	s3.download_file(bucket_name, object_name, save_path)
+	try:
+		s3.download_file(bucket_name, object_name, save_path)
+	except:
+		logger.warning("Cannot download data from S3")
 
 	return None
 
@@ -98,14 +100,22 @@ def test_model(features, labels, split_seed, **kwargs):
 	logger.info("Model metrics calculated")
 	return metrics
 
-if __name__ == "__main__":
+
+def download_training_data():
 
 	# Import modeling data; download from S3 bucket if not in data folder
 	if not path.exists(config.SPOTIFY_LOCATION):
 		logger.info("Downloading modeling data from S3 bucket")
 		download_data(config.S3_BUCKET_NAME, config.SPOTIFY_NAME, config.SPOTIFY_LOCATION)
+	else:
+		logger.info("Training data already exists")
 
-	spotify_df = pd.read_csv(config.SPOTIFY_LOCATION)
+def create_model():
+
+	try:
+		spotify_df = pd.read_csv(config.SPOTIFY_LOCATION)
+	except:
+		logger.warning("Training data does not exist")
 
 	# Hot encode categorical variables and response
 	features, labels = prep_data(spotify_df, config.FEATURE_NAMES)

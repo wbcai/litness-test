@@ -4,13 +4,14 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from os import path
 import os
-import config
+import config.pipelineconfig as config
 import pickle
 import argparse
 import logging.config
 import sys
 
-logger = logging.getLogger('get_data')
+logging.config.fileConfig(config.LOGGING_CONFIG)
+logger = logging.getLogger('__name__')
 
 def query_spotify_id(search):
 	""" Query for spotify id, artist, and title

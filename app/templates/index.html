@@ -2,15 +2,93 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="app/static/basic.css" rel="stylesheet">
+<!--     <link href="/Users/briancai/Drive/NU/Q3/AVC/litness_test/2020-MSIA423-Cai-Litness-Test/app/static/basic.css" rel="stylesheet"> -->
 </head>
 
-<body>
+<style>
+
+  @import url(http://fonts.googleapis.com/css?family=Permanent+Marker:400,700,600);
+  @import url(http://fonts.googleapis.com/css?family=Roboto:400,700,600);
+
+  body {
+    height: 100%;
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Permanent Marker';
+    color:#cacaca;
+    background-color:#243036ff;
+  }
+
+  a:link {
+    color: #ffd966;
+  }
+
+  a:visited {
+  color: #ffd966;
+}
+
+th{
+  color: #FF00FF;
+}
+
+
+tbody {
+  color: #cacaca;
+  font-family: 'Roboto';
+
+}
+
+tr:hover {background-color: #FF00FF;}
+
+input[type=submit] {
+    padding:2px 15px; 
+    background:#ffd966; 
+    border:0 none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px; 
+    font-family: 'Permanent Marker';
+}
+
+input[type=text] {
+    border: 2px solid #ffd966;
+    font-family: 'Permanent Marker';
+}
+
+
+.error {
+  color: #DC143C;
+  font-family: 'Roboto';
+  font-size: 15px;
+}
+
+.center {
+  margin: auto;
+  width: 50%;
+  border: 3px black;
+  padding: 10px;
+}
+
+</style>
+
+<body class = "center">
     <h3>
-         <a href = "{{ url_for('index') }}">Litness Test: Score Based on Rap/Hip-Hop Attributes</a>
+         <a href = "{{ url_for('index') }}">Litness Test: Rating a Song's Rap/Hip-Hop Attributes
+         </a>
+
     </h3>
 
     <hr/>
+
+    <form action="{{ url_for('add_prediction') }}" method=post class=add-entry>
+      <dl>
+        <input type=text size=15 name=search placeholder="Song">
+        <input type=submit value=Search>
+      </dl>
+    </form>
+    {% if error %}
+    <p class=error>{{ error }}
+    {% endif %}
+
     <table>
          <thead>
             <tr>
@@ -30,15 +108,8 @@
             {% endfor %}
          </tbody>
       </table>
-      <form action="{{ url_for('add_prediction') }}" method=post class=add-entry>
-      <dl>
-        <input type=text size=15 name=search placeholder="Song">
-        <input type=submit value=Search>
-      </dl>
-    </form>
-    {% if error %}
-    <p class=error><strong>Error:</strong> {{ error }}
-    {% endif %}
+      
 
+    <br><iframe src="https://giphy.com/embed/yfEjNtvqFBfTa" width="120" height="90" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/epilepsy-warning-muppets-yfEjNtvqFBfTa"></a></p>
 </body>
 </html>

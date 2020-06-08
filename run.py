@@ -4,18 +4,21 @@ import logging.config
 import pickle
 import os
 
-from src.predict_score import *
-from src.update_db import *
-import config
+from src.get_data import create_dataset
+from src.train_model import download_training_data, create_model
+from src.predict_score import make_prediction
+from src.update_db import create_db, add_track
+from test.test import validate_pipeline
+import config.pipelineconfig as config
 
-logging.config.fileConfig(config.LOGGING_CONFIG)
-logger = logging.getLogger('run')
+logging.config.fileConfig(config.LOGGING_CONFIG, disable_existing_loggers=False)
+logger = logging.getLogger('__name__')
 
 if __name__ == '__main__':
 
 	# Add parsers for both creating a database and adding songs to it
 	parser = argparse.ArgumentParser(description="Create database / Make predictions")
-	parser.add_argument('step', help='Which step to run', choices=['get_data', 'create_db', 'predict'])
+	parser.add_argument('step', help='Which step to run', choices=['create_dataset', 'download_data', 'train_model', 'create_db', 'predict', 'validate'])
 	parser.add_argument("--uri", "-u", default = None, help = "Specify SQLAlchemy connection URI for database")
 	parser.add_argument("--search", "-s", default = None, help="Song to make prediction")
 	parser.add_argument("--engine", "-e", default = "SQLite", 
@@ -33,15 +36,22 @@ if __name__ == '__main__':
 			engine_uri = config.MYSQL_ENGINE
 
 	
-	if args.step == 'get_data':
-		# Run python script to get data
-		os.system('python src/get_data.py')
+	if args.step == 'create_dataset':
+		# Gather data from Billboard and Spotify API
+		create_dataset()
+
+	if args.step == 'download_data':
+		# Download training data from S3
+		download_training_data()
+
+	if args.step == 'train_model':
+		# Train model and generate model metrics
+		create_model()
 
 	if args.step == 'create_db':
-		# Create database
+		#Create database
 		try:
 			create_db(engine_uri)
-			logger.info("Database created")
 		except:
 			logger.warning("Database not created")
 	
@@ -50,7 +60,10 @@ if __name__ == '__main__':
 		if args.search == None:
 			logger.warning("No song provided")
 			sys.exit()
-		model = pickle.load(open(config.MODEL_PATH, "rb" ))
+		try:
+			model = pickle.load(open(config.MODEL_PATH, "rb" ))
+		except:
+			logger.warning("Model does not exist")
 		try:
 			result = make_prediction(args.search, model)
 			print("Litness score of {} by {}: \n {}".format(
@@ -63,3 +76,8 @@ if __name__ == '__main__':
 			logger.info("Prediction recorded in database")
 		except:
 			logger.warning("Prediction not recorded in database")
+
+	if args.step == 'validate':
+		# Validate pipeline
+		validate_pipeline(engine_uri)
+
