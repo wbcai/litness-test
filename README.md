@@ -8,12 +8,13 @@
 - [Directory structure](#directory-structure)
 - [Setting up environment variables](#setting-up-environment-variables)
   * [Spotify environment variables](#spotify-environment-variables)
-- [Running the app in Docker](#running-the-app-in-docker)
-  * [1. Build the image](#1-build-the-image)
-  * [2. Connect to NU VPN](#2-connect-to-nu-vpn)
-  * [3. Pull data from Billboard and Spotify API](#3-pull-data-from-billboard-and-spotify-api)
-  * [4. Establish local SQLite and RDS MySQL databases](#4-establish-local-sqlite-and-rds-mysql-databases)
-  * [3. Kill the container](#3-kill-the-container)
+- [Extracting data from Billboard and Spotify](#Extracting-data-from-Billboard-and-Spotify)
+- [Executing model pipeline](#Executing-model-pipeline)
+- [Making and saving predictions](#Making-and-saving-predictions)
+- [Running the application](#Running-the-application)
+- [Running pipeline and app in Docker](#Running-pipeline-and-app-in-Docker)
+  * [Pipeline](#Pipeline)
+  * [Application](#Application)
 - [Backlog](#backlog)
 
 <!-- tocstop -->
@@ -146,7 +147,7 @@ To reset pipeline (i.e., delete files in `/data` and `/model`):
 
     make clear
 
-## Make and save predictions
+## Making and saving predictions
 
 You can make a prediction and save it to your database with the following command:
 
