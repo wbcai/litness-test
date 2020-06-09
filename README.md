@@ -103,6 +103,8 @@ The environment variables involved in this app are listed in `env_config`. Two e
 
     source env_config
     
+For running the pipeline/app on Docker: instead of setting up environment variables via `env_config`, you can also hardcode the environment variables in the Docker run scripts.
+
 Note: Environment variables related to AWS RDS instances are optional. App will by default build a local SQLite database.
 
 ### Spotify environment variables
