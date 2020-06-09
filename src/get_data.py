@@ -250,6 +250,10 @@ def upload_file(file_name, bucket, object_name=None):
 
 def create_dataset():
 
+	""" Pipeline to fetch songs from Billboard charts then extract 
+		song attributes from Spotify API
+	"""
+
 	# Get Top Rap charts
 	try:
 		rapsong = get_billboard_charts(start_year = config.START_YEAR, chart_name = 'rap-song', top_x=config.RAPSONG_TOPX)

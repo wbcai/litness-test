@@ -94,6 +94,17 @@ def create_modeling_features(features):
 
 def make_prediction(search, model):
 
+	""" Make prediction with given query
+
+	inputs:
+		search (str): Song to search for
+		model (obj): Path of model object for prediction
+	returns:
+		results (obj): 'Dictionary' of prediction results
+
+	"""
+
+	# Pull Spotify attributes
 	try:
 		search_result = query_spotify_id(search)
 		logger.info("Found {} by {}".format(search_result['title'], 
@@ -104,10 +115,13 @@ def make_prediction(search, model):
 
 	features = get_song_features(search_result['id'])
 
+	# Transform data for prediction
 	features_df = create_modeling_features(features)
 
+	# Make prediction
 	prediction = model.predict_proba(features_df)[0][1]
 
+	# Record results as dictionary
 	results = {}
 
 	results['title'] = search_result['title']

@@ -103,6 +103,9 @@ def test_model(features, labels, split_seed, **kwargs):
 
 def download_training_data():
 
+	""" Download data from S3
+	"""
+
 	# Import modeling data; download from S3 bucket if not in data folder
 	if not path.exists(config.SPOTIFY_LOCATION):
 		logger.debug("Downloading modeling data from S3 bucket")
@@ -111,6 +114,13 @@ def download_training_data():
 		logger.info("Training data already exists")
 
 def create_model(model_path):
+
+	""" Transform data, fit model, and create model metrics
+
+	inputs:
+		model_path (str): Optional path to save model object; if not provided,
+		model is saved based on pipelineconfig.py
+	"""
 
 	try:
 		spotify_df = pd.read_csv(config.SPOTIFY_LOCATION)
@@ -129,7 +139,6 @@ def create_model(model_path):
 		logger.info("Model metrics saved as %s", config.MODEL_METRICS_PATH)
 	except:
 		logger.warning("Model metrics not saved")
-
 
 	# Train model on full dataset and save to model folder
 	rfc_model = RandomForestClassifier(**config.RFC_PARAMS)

@@ -47,7 +47,7 @@ error = None
 def index():
 	"""Main view that lists songs in the database.
 
-	Create view into index page that uses data queried from Track database and
+	Create view into index page that uses data queried from Litness database and
 	inserts it into the msiapp/templates/index.html template.
 
 	Returns: rendered html template
