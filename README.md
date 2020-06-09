@@ -9,7 +9,9 @@
 - [Setting up environment variables](#setting-up-environment-variables)
   * [Spotify environment variables](#spotify-environment-variables)
 - [Extracting data from Billboard and Spotify](#Extracting-data-from-Billboard-and-Spotify)
-- [Executing model pipeline](#Executing-model-pipeline)
+- [Executing model pipeline with Makefile](#Executing-model-pipeline-with-Makefile)
+- [Execute each step of model pipeline](#Execute-each-step-of-model-pipeline)
+  * [Additional arguments](#Additional-arguments)
 - [Making and saving predictions](#Making-and-saving-predictions)
 - [Running the application](#Running-the-application)
 - [Running pipeline and app in Docker](#Running-pipeline-and-app-in-Docker)
@@ -131,12 +133,10 @@ Perform unit tests with the following command:
 Reset pipeline (i.e., delete files in `/data` and `/model`):
 
     make clear
-    
-Run application:
 
-    make run
+## Execute each step of model pipeline
 
-## Execute each step of model pipeline with `run.py` for more configurations.
+Execute each step of model pipeline with `run.py` for more configurations.
 
 ### Download the extracted dataset from S3:
     
@@ -160,7 +160,7 @@ You can make a prediction and save it to your database with the following comman
 
     python3 run.py predict --search 'Song to predict'
 
-### Additional arguments for `run.py` commands
+### Additional arguments
 - `--engine` or `-e`
   - Specify the use of a local `SQLite` database (default) or `MySQL` database (requires configuration of AWS RDS credentials in `env_config`
   - Applies to `run.py` commands: `create_db`, `validate`, `predict`
@@ -177,7 +177,7 @@ After creating the model and database, you can now run the application:
 
     python3 app.py
 
-You should now be able to access the app at http://0.0.0.0:5000/ in your browser.
+The app is accessible at http://0.0.0.0:5000/ in your browser.
 
 During the model pipeline, if you specified a pathname with the `--model` argument, you must also include the same argument when running the app script (e.g., `python3 app.py --model [model path]`)
 
@@ -216,6 +216,8 @@ docker run --mount type=bind,source="$(pwd)",target=/app/ litness validate \
 -e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
 -e AWS_BUCKET=${AWS_BUCKET} 
 ```
+
+The pipeline and unit tests are orchestrated with the `Makefile`. To add additional arguements (e.g., engine URI, model path), please updated the `Makefile` with arguements from [Additional arguments](#Additional-arguments)
 
 ### Application
 
