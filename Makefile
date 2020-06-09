@@ -5,12 +5,15 @@ train_model:
 	python3 run.py train_model
 
 create_db:
-	python3 run.py create_db --engine MySQL
+	python3 run.py create_db --engine SQLite
+
+pipeline: download_data train_model create_db
 
 validate:
-	python3 run.py validate --engine MySQL
+	python3 run.py validate --engine SQLite
 
-pipeline: download_data train_model create_db validate
+run_app:
+	python3 app.py
 
 clear:
 	rm model/*

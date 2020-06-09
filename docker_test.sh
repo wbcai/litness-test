@@ -1,4 +1,4 @@
-docker run --mount type=bind,source="$(pwd)",target=/app/ \
+docker run --mount type=bind,source="$(pwd)",target=/app/ litness validate \
 -e SPOTIFY_CID=${SPOTIFY_CID} \
 -e SPOTIFY_SECRET=${SPOTIFY_SECRET} \
 -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
@@ -9,6 +9,4 @@ docker run --mount type=bind,source="$(pwd)",target=/app/ \
 -e AVC_MYSQL_PASSWORD=${AVC_MYSQL_PASSWORD} \
 -e AVC_MYSQL_HOST=${AVC_MYSQL_HOST} \
 -e AVC_MYSQL_PORT=${AVC_MYSQL_PORT} \
--e AVC_DATABASE_NAME=${AVC_DATABASE_NAME} \
--p 5000:5000 \
---name test litness app.py
+-e AVC_DATABASE_NAME=${AVC_DATABASE_NAME}

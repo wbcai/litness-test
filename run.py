@@ -8,7 +8,8 @@ from src.get_data import create_dataset
 from src.train_model import download_training_data, create_model
 from src.predict_score import make_prediction
 from src.update_db import create_db, add_track
-from test.test import validate_pipeline
+from test.test import validate_training_data, check_spotify_credentials, \
+					check_model_reproducibility, test_database
 import config.pipelineconfig as config
 
 logging.config.fileConfig(config.LOGGING_CONFIG, disable_existing_loggers=False)
@@ -23,6 +24,7 @@ if __name__ == '__main__':
 	parser.add_argument("--search", "-s", default = None, help="Song to make prediction")
 	parser.add_argument("--engine", "-e", default = "SQLite", 
 									help="Specify MySQL or SQLite; connection URI based on environment variables")
+	parser.add_argument("--model", "-m", default = config.MODEL_PATH, help="Target path for model object")
 
 	args = parser.parse_args()
 
@@ -45,8 +47,9 @@ if __name__ == '__main__':
 		download_training_data()
 
 	if args.step == 'train_model':
+
 		# Train model and generate model metrics
-		create_model()
+		create_model(args.model)
 
 	if args.step == 'create_db':
 		#Create database
@@ -61,7 +64,7 @@ if __name__ == '__main__':
 			logger.warning("No song provided")
 			sys.exit()
 		try:
-			model = pickle.load(open(config.MODEL_PATH, "rb" ))
+			model = pickle.load(open(args.model, "rb" ))
 		except:
 			logger.warning("Model does not exist")
 		try:
@@ -79,5 +82,8 @@ if __name__ == '__main__':
 
 	if args.step == 'validate':
 		# Validate pipeline
-		validate_pipeline(engine_uri)
+		validate_training_data()
+		check_spotify_credentials()
+		check_model_reproducibility(args.model)
+		test_database(engine_uri)
 

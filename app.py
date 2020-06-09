@@ -6,16 +6,18 @@ from src.predict_score import *
 from src.update_db import Litness
 from flask_sqlalchemy import SQLAlchemy
 import config.pipelineconfig as config
-import argparse
 import pickle
 
-# Add parser for specific engine URI
-parser = argparse.ArgumentParser(description="Run application; can specify engine URI")
-parser.add_argument("--uri", "-u", default = None, help = "Specify SQLAlchemy connection URI for database")
+# Create argparser for user to specify model object
+parser = argparse.ArgumentParser(description="Run Flask app")
+parser.add_argument("--model", "-m", default = None, help="Path for model object")
 args = parser.parse_args()
 
-if args.uri is not None:
-	SQLALCHEMY_DATABASE_URI = args.uri
+if args.model is not None:
+	model_path = args.model
+else:
+	model_path = config.MODEL_PATH
+
 
 # Initialize the Flask application
 app = Flask(__name__, template_folder="app/templates")
@@ -33,7 +35,11 @@ logger.debug('Test log')
 db = SQLAlchemy(app)
 
 # Import pre-trained model
-model = pickle.load(open(config.MODEL_PATH, "rb" ))
+try:
+	model = pickle.load(open(model_path, "rb" ))
+	logging.debug("Model loaded from %s", model_path)
+except:
+	logging.warning("Cannot load model from $s", model_path)
 
 error = None
 

@@ -57,7 +57,7 @@ def prep_data(spotify_df, feature_names):
 	features = spotify_df.loc[:, feature_names]
 	labels = np.array(spotify_df['chart_rap-song'])
 
-	logger.info("Features and labels created")
+	logger.debug("Features and labels created")
 
 	return features, labels
 
@@ -80,7 +80,7 @@ def test_model(features, labels, split_seed, **kwargs):
 	# Fit model with training data
 	model = RandomForestClassifier(**kwargs)
 	model.fit(train_features, train_labels)
-	logger.info("Model fit with training data")
+	logger.debug("Model fit with training data")
 	# Predict probabilities with testing data
 	test_predictions = model.predict(test_features)
 	test_probs = model.predict_proba(test_features)[:, 1]
@@ -97,7 +97,7 @@ def test_model(features, labels, split_seed, **kwargs):
 	metrics['test_recall'] = round(recall_score(test_labels, test_predictions),2).tolist()
 	metrics['test_precision'] = round(precision_score(test_labels, test_predictions),2).tolist()
 	metrics['test_roc'] = round(roc_auc_score(test_labels, test_probs),2).tolist()
-	logger.info("Model metrics calculated")
+	logger.debug("Model metrics calculated")
 	return metrics
 
 
@@ -105,12 +105,12 @@ def download_training_data():
 
 	# Import modeling data; download from S3 bucket if not in data folder
 	if not path.exists(config.SPOTIFY_LOCATION):
-		logger.info("Downloading modeling data from S3 bucket")
+		logger.debug("Downloading modeling data from S3 bucket")
 		download_data(config.S3_BUCKET_NAME, config.SPOTIFY_NAME, config.SPOTIFY_LOCATION)
 	else:
 		logger.info("Training data already exists")
 
-def create_model():
+def create_model(model_path):
 
 	try:
 		spotify_df = pd.read_csv(config.SPOTIFY_LOCATION)
@@ -135,10 +135,15 @@ def create_model():
 	rfc_model = RandomForestClassifier(**config.RFC_PARAMS)
 	rfc_model.fit(features, labels)
 
+	# If model path was not provided, use default config path
+	if model_path is None:
+		logger.warning("Model path not provided")
+		
+	# Save model	
 	try:
-		with open(config.MODEL_PATH, "wb") as f:
+		with open(model_path, "wb") as f:
 				pickle.dump(rfc_model, f)
-		logger.info("Trained model object saved as %s", config.MODEL_PATH)
+		logger.info("Trained model object saved as %s", model_path)
 	except:
 		logger.warning("Trained model not saved")
 
