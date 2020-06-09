@@ -118,19 +118,25 @@ To extract the data necessary for the modeling pipeline, run the following comma
 
 The data will be saved in `data/` and in your designated AWS S3 bucket. Note: it is common to have unsuccessful queries from the Billboard API for certain dates. It is even more common for the Spotify API to not have music attributes for songs from Billboard charts.
 
-## Executing model pipeline
+## Executing model pipeline with Makefile
 
 Once you extracted and saved the Billboard and Spotify dataset in S3, you can execute the entire model pipeline with the following command:
 
     make pipeline
 
-Then you can validate each step of the pipeline with the following command:
+Perform unit tests with the following command:
 
     make validate
     
-Any issues with the pipeline will generate a warning log. 
+Reset pipeline (i.e., delete files in `/data` and `/model`):
 
-You can also execute each step of the model pipeline with `run.py` for more configurations.
+    make clear
+    
+Run application:
+
+    make run
+
+## Execute each step of model pipeline with `run.py` for more configurations.
 
 ### Download the extracted dataset from S3:
     
@@ -143,28 +149,27 @@ You can also execute each step of the model pipeline with `run.py` for more conf
 ### Create a database for saving model predictions:
 
     python3 run.py create_db
-    
-There are two optional arguments that you can include with `create_db`:
-- `--engine` or `-e`: Specify whether to create a `SQLite` database in `/data` or `MySQL` database using AWS RDD credentials configured in `env_config`; default is `SQLite`
-- `--uri` or `-u`: Specify specific engine URI; this overwrites the `--engine` argument. 
-
-### Validate pipeline and ensure all components are present for making predictions:
+   
+### Perform unit tests to ensure that all components/configurations are present for making predictions:
 
     python3 run.py validate
     
-Validate will also accept the `--engine` or `--uri` arguements. If no arguements are provided, database validation will be made on the SQLite database (assuming it has been initiated from the previous step).
-
-### Reset pipeline (i.e., delete files in `/data` and `/model`):
-
-    make clear
-
-## Making and saving predictions
+### Making and saving predictions
 
 You can make a prediction and save it to your database with the following command:
 
-    python3 run.py predict --search ['Song to predict']
-    
-Without additional arguements, predictions are saved in the local SQLite database. `--engine` or `--uri` can be used to specify where to save the predictions.
+    python3 run.py predict --search 'Song to predict'
+
+### Additional arguments for `run.py` commands
+- `--engine` or `-e`
+  - Specify the use of a local `SQLite` database (default) or `MySQL` database (requires configuration of AWS RDS credentials in `env_config`
+  - Applies to `run.py` commands: `create_db`, `validate`, `predict`
+- `--uri` or `-u`
+  - Specify the use of a engine URI for database; overwrites `--engine` argument
+  - Applies to `run.py` commands: `create_db`, `validate`, `predict`
+- `--model` or `-m`
+  - Specify pathname for model object
+  - Applies to `run.py` commands: `train_model`, `predict`
 
 ## Running the application
 
@@ -174,9 +179,9 @@ After creating the model and database, you can now run the application:
 
 You should now be able to access the app at http://0.0.0.0:5000/ in your browser.
 
-By default, the app will use the MySQL database with credentials in ```env_config```. To use another database URI, first save the database URI as environment variable `SQLALCHEMY_DATABASE_URI`, then initialize the database:
+During the model pipeline, if you specified a pathname with the `--model` argument, you must also include the same argument when running the app script (e.g., `python3 app.py --model [model path]`)
 
-    python3 run.py create_db --uri '[your database URI]'
+By default, the app will use the SQLite database. To use another database URI, save the database URI as environment variable `SQLALCHEMY_DATABASE_URI`.
     
 ## Running pipeline and app in Docker
 
