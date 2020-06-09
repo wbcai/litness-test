@@ -12,7 +12,6 @@
 - [Executing model pipeline with Makefile](#Executing-model-pipeline-with-Makefile)
 - [Execute each step of model pipeline](#Execute-each-step-of-model-pipeline)
   * [Additional arguments](#Additional-arguments)
-- [Making and saving predictions](#Making-and-saving-predictions)
 - [Running the application](#Running-the-application)
 - [Running pipeline and app in Docker](#Running-pipeline-and-app-in-Docker)
   * [Pipeline](#Pipeline)
@@ -229,7 +228,15 @@ docker build -f app/Dockerfile -t litness .
 To run the application, execute the following script:
 
 ```bash
-sh app/docker_run.sh 
+docker run --mount type=bind,source="$(pwd)",target=/app/ \
+-e SPOTIFY_CID=${SPOTIFY_CID} \
+-e SPOTIFY_SECRET=${SPOTIFY_SECRET} \
+-e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+-e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+-e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
+-e AWS_BUCKET=${AWS_BUCKET} \
+-p 5000:5000 \
+--name test litness app.py
 ```
 
 ### Kill the container 
