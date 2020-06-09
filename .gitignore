@@ -13,4 +13,4 @@ config/local
 
 **/old
 
-.*config
+.*config*
