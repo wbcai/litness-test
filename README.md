@@ -98,9 +98,11 @@
 
 ## Setting up environment variables
 
-The required environment variables are listed in `env_config`. Note: two environment variables require a Spotify account. Please see section below on instructions for obtaining those variables. After completing the env_config file, set the environment variables following bash commands:
+The environment variables involved in this app are listed in `env_config`. Two environment variables require a Spotify account. Please see section below on instructions for obtaining those variables. After completing the env_config file, set the environment variables following bash commands:
 
     source env_config
+    
+Note: Environment variables related to AWS RDS instances are optional. App will by default build a local SQLite database.
 
 ### Spotify environment variables
 
