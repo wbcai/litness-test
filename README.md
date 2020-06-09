@@ -24,9 +24,9 @@
 ## Project charter
 
 **Scenario:**
-- We are data science consultants at Spotify; with our proprietary music information retrieval (MIR) platform, we develop data-driven solutions to tackle problems in the music industry
+- We are data science consultants; with our proprietary music information retrieval (MIR) platform, we develop data-driven solutions to tackle problems in the music industry
 - Rap/Hip-Hop is perhaps the most dynamic and influential music genres that exists today – it challenges social norms and pushes creativity in music production, and revitalize music across all genres and time periods through sampling 
-- A record label has approached Spotify to help them expand their Rap/Hip-Hop division 
+- A record label has approached us to help them expand their Rap/Hip-Hop division 
 
 **Vision:** Because the label receives hundreds of music files everyday, they are looking for an automated way to prioritize the review of songs with more Rap/Hip-Hop influences 
 
