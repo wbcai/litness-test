@@ -122,6 +122,12 @@ Once you extracted and saved the Billboard and Spotify dataset in S3, you can ex
 
     make pipeline
 
+Then you can validate each step of the pipeline with the following command:
+
+    make validate
+    
+Any issues with the pipeline will generate a warning log. 
+
 You can also execute each step of the model pipeline with `run.py` for more configurations.
 
 ### Download the extracted dataset from S3:
@@ -143,6 +149,8 @@ There are two optional arguments that you can include with `create_db`:
 ### Validate pipeline and ensure all components are present for making predictions:
 
     python3 run.py validate
+    
+Validate will also accept the `--engine` or `--uri` arguements. If no arguements are provided, database validation will be made on the SQLite database (assuming it has been initiated from the previous step).
 
 ### Reset pipeline (i.e., delete files in `/data` and `/model`):
 
@@ -183,7 +191,23 @@ This command builds the Docker image, with the tag `litness`, based on the instr
 To run the pipeline, execute the following script: 
 
 ```bash
-sh docker_pipeline.sh
+docker run --mount type=bind,source="$(pwd)",target=/app/ litness pipeline \
+-e SPOTIFY_CID=${SPOTIFY_CID} \
+-e SPOTIFY_SECRET=${SPOTIFY_SECRET} \
+-e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+-e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+-e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
+-e AWS_BUCKET=${AWS_BUCKET} 
+```
+To run unit tests, execute the following scrips:
+```bash
+docker run --mount type=bind,source="$(pwd)",target=/app/ litness validate \
+-e SPOTIFY_CID=${SPOTIFY_CID} \
+-e SPOTIFY_SECRET=${SPOTIFY_SECRET} \
+-e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+-e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+-e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
+-e AWS_BUCKET=${AWS_BUCKET} 
 ```
 
 ### Application
