@@ -20,10 +20,10 @@ if __name__ == '__main__':
 	# Add parsers for both creating a database and adding songs to it
 	parser = argparse.ArgumentParser(description="Create database / Make predictions")
 	parser.add_argument('step', help='Which step to run', choices=['create_dataset', 'download_data', 'train_model', 'create_db', 'predict', 'validate'])
-	parser.add_argument("--uri", "-u", default = None, help = "Specify SQLAlchemy connection URI for database")
+	parser.add_argument("--uri", "-u", default = None, help = "Use specific connection URI for database")
 	parser.add_argument("--search", "-s", default = None, help="Song to make prediction")
 	parser.add_argument("--engine", "-e", default = "SQLite", 
-									help="Specify MySQL or SQLite; connection URI based on environment variables")
+									help="Specify 'MySQL' to use MySQL environment variables")
 	parser.add_argument("--model", "-m", default = config.MODEL_PATH, help="Target path for model object")
 
 	args = parser.parse_args()
@@ -33,7 +33,7 @@ if __name__ == '__main__':
 		engine_uri = args.uri
 	else:
 		if args.engine == "SQLite":
-			engine_uri = config.SQLITE_ENGINE
+			engine_uri = config.SQLALCHEMY_DATABASE_URI
 		else:
 			engine_uri = config.MYSQL_ENGINE
 

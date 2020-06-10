@@ -29,7 +29,7 @@ SPOTIFY_CID = os.environ.get("SPOTIFY_CID")
 SPOTIFY_SECRET = os.environ.get("SPOTIFY_SECRET")
 
 # S3
-S3_BUCKET_NAME = os.environ.get("AWS_BUCKET")
+S3_BUCKET_NAME = 'wbc881bk1'
 BB_HOT100_NAME = 'bb_hot100_{}_to_{}.json'.format(START_YEAR, END_YEAR)
 BB_RAPSONG_NAME = 'bb_rapsong_{}_to_{}.json'.format(START_YEAR, END_YEAR)
 SPOTIFY_NAME = 'spotify_{}_to_{}.csv'.format(START_YEAR, END_YEAR)
@@ -49,6 +49,12 @@ HOST = os.environ.get("AVC_MYSQL_HOST")
 PORT = os.environ.get("AVC_MYSQL_PORT")
 DATABASE_NAME = os.environ.get("AVC_DATABASE_NAME")
 MYSQL_ENGINE = "{}://{}:{}@{}:{}/{}".format(CONN_TYPE, USER, PASSWORD, HOST, PORT, DATABASE_NAME)
+
+# SQLAlchemy database
+SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
+if SQLALCHEMY_DATABASE_URI is not None:
+	pass
+else: SQLALCHEMY_DATABASE_URI = SQLITE_ENGINE
 
 #Model
 KEY_DICT = {0:'C', 1:'Db', 2: 'D', 3:'Eb', 4:'E', 5:'F', 6:'Gb', 
