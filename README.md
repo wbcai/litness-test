@@ -161,7 +161,7 @@ You can make a prediction and save it to your database with the following comman
 
 ### Additional arguments
 - `--engine` or `-e`
-  - Specify the use of a local `SQLite` database (default) or `MySQL` database (requires configuration of AWS RDS credentials in `env_config`
+  - Specify the use of `MySQL` database (requires configuration of AWS RDS credentials in `env_config`). Without this argument, the URI from the environment variable `SQLALCHEMY_DATABASE_URI` is used. Without a `SQLALCHEMY_DATABASE_URI` variable, a `SQLite` database will be created in the data folder.
   - Applies to `run.py` commands: `create_db`, `validate`, `predict`
 - `--uri` or `-u`
   - Specify the use of a engine URI for database; overwrites `--engine` argument
