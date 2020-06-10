@@ -201,20 +201,17 @@ docker run --mount type=bind,source="$(pwd)",target=/app/ litness pipeline \
 -e SPOTIFY_CID=${SPOTIFY_CID} \
 -e SPOTIFY_SECRET=${SPOTIFY_SECRET} \
 -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
--e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
--e AWS_DEFAULT_REGION=us-east-2  \
--e AWS_BUCKET=wbc881bk1
+-e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 ```
 To run unit tests, execute the following scrips:
 ```bash
 docker run --mount type=bind,source="$(pwd)",target=/app/ litness validate \
 -e SPOTIFY_CID=${SPOTIFY_CID} \
--e SPOTIFY_SECRET=${SPOTIFY_SECRET} \
--e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
--e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
--e AWS_DEFAULT_REGION=us-east-2 \
--e AWS_BUCKET=wbc881bk1
+-e SPOTIFY_SECRET=${SPOTIFY_SECRET}
 ```
+If you want to specify a specific engine URI for the pipeline, please set local environment variable `SQLALCHEMY_DATABASE_URI` to the desired URI and add the following argument to both the pipeline and unit test script:
+
+    -e SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
 
 The pipeline and unit tests are orchestrated with the `Makefile`. To add additional arguements (e.g., engine URI, model path), please updated the `Makefile` with arguements from [Additional arguments](#Additional-arguments)
 
@@ -234,6 +231,8 @@ docker run --mount type=bind,source="$(pwd)",target=/app/ \
 -p 5000:5000 \
 --name test litness app.py
 ```
+
+If you specified a `SQLALCHEMY_DATABASE_URI` variable, you must add the `-e SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}` arguement to the application execution script as well.
 
 ### Kill the container 
 
