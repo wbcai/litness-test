@@ -47,7 +47,7 @@ def create_db(sql_path):
 	session = Session()
 
 	session.commit()
-	logger.info("Database created")
+	logger.info("Database created: {}".format(sql_path))
 	session.close()
 
 def add_track(result, sql_path):
