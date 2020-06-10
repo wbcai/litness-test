@@ -99,9 +99,9 @@
 
 ## Setting up environment variables
 
-Four environment variables are required for this application. First two are `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. These are required for downloading the training dataset from S3. The other two environment variables require a Spotify account. Please see section below on instructions for obtaining those variables.
+Four host environment variables are required for this application. First two are `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. These are required for downloading the training dataset from S3. The other two environment variables are for querying music attributes from the Spotify API. Please see instructions below to set them up. These four variables will be automatically applied to the Docker container with the provided scripts in [Running pipeline and app in Docker](#Running-pipeline-and-app-in-Docker).
 
-Environment variables related to AWS RDS instances are optional. App will by default build a local SQLite database. To use an RDS instance, please complete the `env_config` template, then apply the environment variables:
+Environment variables related to AWS RDS instances are optional. To use an RDS instance, please complete the `env_config` template, then apply the environment variables:
 
     source env_config
 
