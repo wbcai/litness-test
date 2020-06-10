@@ -101,7 +101,9 @@
 
 Four environment variables are required for this application. First two are `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. These are required for downloading the training dataset from S3. The other two environment variables require a Spotify account. Please see section below on instructions for obtaining those variables.
 
-Note: Environment variables related to AWS RDS instances are optional. App will by default build a local SQLite database.
+Environment variables related to AWS RDS instances are optional. App will by default build a local SQLite database. To use an RDS instance, please complete the `env_config` template, then apply the environment variables:
+
+    source env_config
 
 ### Spotify environment variables
 
