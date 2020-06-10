@@ -213,7 +213,7 @@ If you want to specify a specific engine URI for the pipeline, please set local 
 
     -e SQLALCHEMY_DATABASE_URI=${SQLALCHEMY_DATABASE_URI}
 
-The pipeline and unit tests are orchestrated with the `Makefile`. To add additional arguements (e.g., engine URI, model path), please updated the `Makefile` with arguements from [Additional arguments](#Additional-arguments)
+The pipeline and unit tests are orchestrated with the `Makefile`. To add additional arguements (e.g., model path), please updated the `Makefile` with arguements from [Additional arguments](#Additional-arguments)
 
 ### Application
 
