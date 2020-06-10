@@ -99,11 +99,7 @@
 
 ## Setting up environment variables
 
-The environment variables involved in this app are listed in `env_config`. Two environment variables require a Spotify account. Please see section below on instructions for obtaining those variables. After completing the env_config file, set the environment variables following bash commands:
-
-    source env_config
-    
-For running the pipeline/app on Docker: instead of setting up environment variables via `env_config`, you can also hardcode the environment variables in the Docker run scripts.
+Four environment variables are required for this application. First two are `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. These are required for downloading the training dataset from S3. The other two environment variables require a Spotify account. Please see section below on instructions for obtaining those variables.
 
 Note: Environment variables related to AWS RDS instances are optional. App will by default build a local SQLite database.
 
@@ -111,7 +107,7 @@ Note: Environment variables related to AWS RDS instances are optional. App will 
 
 Environment variables `SPOTIFY_CID` and `SPOTIFY_SECRET` are required for obtaining data from the Spotify Web API. You must first create a Spotify user account (Premium or Free). Then go to the [Dashboard](https://developer.spotify.com/dashboard) page at the Spotify Developer website and, if necessary, log in. Accept the latest Developer Terms of Service to complete your account set up.
 
-At the Dashboard, you can now create a new Client ID (i.e., a new app). Once you fill in some general information and accept terms and conditions, you land in the app dashboard. Here you can see your Client ID and Client Secret. The Client ID is the environment variable `SPOTIFY_CID` and the Client Secret is the environment variable `SPOTIFY_SECRET`. For screenshots of these directions, please see `/figures`.
+At the Dashboard, you can now create a new Client ID (i.e., a new app). Once you fill in some general information and accept terms and conditions, you land in the app dashboard. Here you can see your Client ID and Client Secret. Set Client ID as your environment variable `SPOTIFY_CID` and the Client Secret as environment variable `SPOTIFY_SECRET`. For screenshots of these directions, please see `/figures`.
 
 ## Extracting data from Billboard and Spotify
 
@@ -204,8 +200,8 @@ docker run --mount type=bind,source="$(pwd)",target=/app/ litness pipeline \
 -e SPOTIFY_SECRET=${SPOTIFY_SECRET} \
 -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
 -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
--e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
--e AWS_BUCKET=${AWS_BUCKET} 
+-e AWS_DEFAULT_REGION=us-east-2  \
+-e AWS_BUCKET=wbc881bk1
 ```
 To run unit tests, execute the following scrips:
 ```bash
@@ -214,8 +210,8 @@ docker run --mount type=bind,source="$(pwd)",target=/app/ litness validate \
 -e SPOTIFY_SECRET=${SPOTIFY_SECRET} \
 -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
 -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
--e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
--e AWS_BUCKET=${AWS_BUCKET} 
+-e AWS_DEFAULT_REGION=us-east-2 \
+-e AWS_BUCKET=wbc881bk1
 ```
 
 The pipeline and unit tests are orchestrated with the `Makefile`. To add additional arguements (e.g., engine URI, model path), please updated the `Makefile` with arguements from [Additional arguments](#Additional-arguments)
@@ -233,10 +229,6 @@ To run the application, execute the following script:
 docker run --mount type=bind,source="$(pwd)",target=/app/ \
 -e SPOTIFY_CID=${SPOTIFY_CID} \
 -e SPOTIFY_SECRET=${SPOTIFY_SECRET} \
--e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
--e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
--e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
--e AWS_BUCKET=${AWS_BUCKET} \
 -p 5000:5000 \
 --name test litness app.py
 ```
