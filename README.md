@@ -113,7 +113,7 @@ At the Dashboard, you can now create a new Client ID (i.e., a new app). Once you
 
 ## Extracting data from Billboard and Spotify
 
-To extract the data necessary for the modeling pipeline, run the following command:
+To extract the data from Billboard and Spotify API, run the following command:
 
     python3 run.py create_dataset
 
